@@ -251,7 +251,7 @@ void lcdInit(void)
     DATA(0xA5);
     DATA(0xAA);
     DATA(0xAF);
-    DATA(0xBF);
+    DATA(0xB4);
 
   // Clear screen
   lcdFillRGB(0,0,0);
