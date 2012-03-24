@@ -12,7 +12,7 @@ endif
 ifneq ($(findstring Darwin,$(OSTYPE)),)
 USB_DEVICE = /dev/cu.usbserial-A6008jMH
 else
-USB_DEVICE = /dev/ttyUSB1
+USB_DEVICE = /dev/ttyUSB0
 endif
 
 
@@ -67,6 +67,6 @@ clean:
 #########################################################################
 
 flash: all
-	avrdude -p m168 -c STK500v2 -P /dev/cu.SLAB_USBtoUART -U flash:w:$(PROJECT).hex
+	avrdude -p m168 -c STK500v2 -P $(USB_DEVICE) -U flash:w:$(PROJECT).hex
 #	avrdude  -p $(MCU_AVRDUDE) -c arduino -P $(USB_DEVICE) -b19200 -U flash:w:$(PROJECT).hex
 #avrdude -p m168 -c STK500v2 -P /dev/cu.SLAB_USBtoUART -U lfuse:w:0xf7:m -U hfuse:w:0xdc:m -U efuse:w:0x01:m

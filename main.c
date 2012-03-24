@@ -38,7 +38,7 @@ int main(void)
 {
 
 	lcdInit();
-		while(1)
+/*		while(1)
 		{
 			setLedXY(0,0,255,255,255);
 			for(uint8_t i = 0;i<127;i++)
@@ -58,7 +58,7 @@ int main(void)
 				setLedXY(i+1,10,0,0,i*2);
 				setLedXY(i+1,11,0,0,i*2);
 			}
-		}
+		}*/
 			
 	
 
