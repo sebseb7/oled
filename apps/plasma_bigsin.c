@@ -56,9 +56,6 @@ static uint8_t tick(void) {
 	double x1 = (double)sini(a*50)/128-128;
 	double y1 = (double)sini((a*50)+0x1000)/128-128;
 		
-
-		printf("%f\n",y0);
-
 	for(y = 0; y < LED_HEIGHT; y++) 
 	{
 		uint16_t y_part =  sini(sin1+y*200);
