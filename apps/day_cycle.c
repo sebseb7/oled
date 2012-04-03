@@ -1,8 +1,7 @@
-#include <stdlib.h>
-#include "main.h"
 #include <stdio.h>
-#include <time.h>
 
+
+#include "main.h"
 #include "wuline.h"
 #include "circle.h"
 #include "text.h"
@@ -28,9 +27,7 @@ static uint8_t tick(void) {
 		hour++;
 	}
 	if(hour==24)
-	{
 		hour=0;
-	}
 
 	uint8_t next_hour = hour+1;
 	if(next_hour == 24)
