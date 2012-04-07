@@ -20,8 +20,6 @@ uint8_t hour = 0;
 static uint8_t tick(void) {
 
 	minute++;
-	minute++;
-	minute++;
 	if(minute == 60)
 	{
 		minute=0;
