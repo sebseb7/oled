@@ -7,8 +7,9 @@ static lcdProperties_t ssd1351Properties = { 128, 128 };
 /* Private Methods                               */
 /*************************************************/
 
-#define CMD(c)        do { SET_CS; CLR_CS; CLR_DC; ssd1351SendByte( c, 1 ); SET_CS; } while (0)
-#define DATA(c)       do { SET_CS; CLR_CS; SET_DC; ssd1351SendByte( c, 0 ); SET_CS; } while (0);
+#define CMD(c)        do { SET_CS; CLR_CS; CLR_DC; ssd1351SendByte( c, 1 ); CLR_CS; } while (0)
+//#define DATA(c)       do { SET_CS; CLR_CS; SET_DC; ssd1351SendByte( c, 0 ); SET_CS; } while (0);
+#define DATA(c)       do {  SET_DC; ssd1351SendByte( c, 0 );  } while (0);
 #define DELAY(mS)     do { _delay_ms(mS); } while(0);
 
 /**************************************************************************/
@@ -27,8 +28,14 @@ void ssd1351SendByte(uint8_t byte, uint8_t command)
 
   // Make sure clock pin starts high
   SET_SCK;
+	
+	
+	SPDR = byte; 
+	while(!(SPSR & (1<<SPIF)));
 
-#if defined SSD1351_BUS_SPI3
+	return;
+/*#if defined SSD1351_BUS_SPI3
+
   // Prepend D/C bit (cmd = 0, data = 1)
   CLR_SCK;
   if (command)
@@ -40,7 +47,7 @@ void ssd1351SendByte(uint8_t byte, uint8_t command)
     SET_SID;
   }
   SET_SCK;
-#endif
+#endif*/
 
   // Write from MSB to LSB
   for (i=7; i>=0; i--) 
@@ -112,6 +119,9 @@ void lcdInit(void)
 #endif
 
 
+	DDRB |= (1<<PORTB2);
+	SPCR |= (1<<SPE)|(1<<MSTR);
+	SPSR |= (1<<SPI2X);
   // Reset the LCD
   SET_RST;
   DELAY(20);
@@ -131,9 +141,9 @@ void lcdInit(void)
   DATA(0xB1);                               // Make all commands accessible 
   CMD(SSD1351_CMD_SLEEPMODE_DISPLAYOFF);
   CMD(SSD1351_CMD_SETFRONTCLOCKDIV);
-  DATA(0xF1);
+  DATA(0x80);//was F1
   CMD(SSD1351_CMD_SETMUXRRATIO);
-  DATA(0x7F);
+  DATA(0x7F);//7f
   CMD(SSD1351_CMD_COLORDEPTH);
   DATA(0x74);                               // Bit 7:6 = 65,536 Colors, Bit 3 = BGR or RGB
   CMD(SSD1351_CMD_SETCOLUMNADDRESS);
@@ -172,7 +182,7 @@ void lcdInit(void)
 
   // Use default grayscale for now to save flash space, but here are
   // the values if someone wants to change them ...
-    CMD(SSD1351_CMD_GRAYSCALELOOKUP);
+ /*   CMD(SSD1351_CMD_GRAYSCALELOOKUP);
     DATA(0x02);
     DATA(0x03);
     DATA(0x04);
@@ -235,7 +245,7 @@ void lcdInit(void)
     DATA(0xA5);
     DATA(0xAA);
     DATA(0xAF);
-    DATA(0xBF);
+    DATA(0xBF);*/
 
   // Clear screen
   lcdFillRGB(0,0,0);

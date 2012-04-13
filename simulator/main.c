@@ -6,6 +6,7 @@
 #include <SDL/SDL.h>
 
 #include "main.h"
+#include "ssd1351.h"
 
 #include<unistd.h>
 #include<sys/time.h>
