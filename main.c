@@ -56,14 +56,14 @@ int main(void)
 //  lcdFillRGB(colorsRGB24toRGB565( x*2, y*2,0));
 				//lcdDrawPixel(x,y,  colorsRGB24toRGB565( 255,255,255));
 				draw_filledCircle(64,64,62,x*2,(127-x)*2,0);
-				_delay_ms(3100);
+//				_delay_ms(3100);
 //			}
 		}
 		for(uint8_t x = 0;x < 128;x++)
 		{
 			for(uint8_t y = 0; y < 128; y++)
 			{
-				lcdDrawPixel(x,y,  colorsRGB24toRGB565( 0,x*2, y*2));
+				setLedXY(x,y,0,x*2,y*2);
 			}
 		}
 		

@@ -295,23 +295,15 @@ void lcdFillRGB(uint16_t data)
     @brief  Draws a single pixel at the specified X/Y location
 */
 /**************************************************************************/
-void lcdDrawPixel(uint16_t x, uint16_t y, uint16_t color)
+
+void setLedXY(uint8_t x, uint8_t y, uint8_t r,uint8_t g, uint8_t b)
 {
   if ((x >= ssd1351Properties.width) || (y >= ssd1351Properties.height))
     return;
 
   ssd1351SetCursor((uint8_t)x, (uint8_t)y);
-  DATA(color >> 8);
-  DATA(color);
+
+  DATA( (r&0xF8) | (g>>5) );
+  DATA( (b>>3) | ((g>>2)<<5) );
 }
 
-
-uint16_t colorsRGB24toRGB565(uint8_t r, uint8_t g, uint8_t b)
-{
-  return ((r / 8) << 11) | ((g / 4) << 5) | (b / 8);
-}
-
-void setLedXY(uint8_t x,uint8_t  y, uint8_t r,uint8_t g,uint8_t b)
-{
-	lcdDrawPixel(x,y,colorsRGB24toRGB565(r,g,b));
-}

@@ -31,15 +31,6 @@ typedef struct
     #define SSD1351_BUS_SPI3
   //  #define SSD1351_BUS_SPI4
 /*=========================================================================*/
-#define	COLOR_BLACK                         (uint16_t)(0x0000)
-#define	COLOR_BLUE                          (uint16_t)(0x001F)
-#define	COLOR_RED                           (uint16_t)(0xF800)
-#define	COLOR_GREEN                         (uint16_t)(0x07E0)
-#define COLOR_CYAN                          (uint16_t)(0x07FF)
-#define COLOR_MAGENTA                       (uint16_t)(0xF81F)
-#define COLOR_YELLOW                        (uint16_t)(0xFFE0)
-#define COLOR_WHITE                         (uint16_t)(0xFFFF)
-
 
 // Macros for control line state
 #define SET_SID	(PORTB |= (1<<PORTB3))		// B3
@@ -100,8 +91,6 @@ enum
 void lcdFillRGB(uint16_t data);
 void lcdInit(void);
 void lcdTest(void);
-void lcdDrawPixel(uint16_t x, uint16_t y, uint16_t color);
-uint16_t colorsRGB24toRGB565  ( uint8_t r, uint8_t g, uint8_t b );
 void setLedXY(uint8_t x,uint8_t  y, uint8_t r,uint8_t g,uint8_t b);
 
 #endif
