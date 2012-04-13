@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #include "font8x6.h"
-#include "main.h"
+#include "ssd1351.h"
 
 void draw_char(int x,int y, char text, uint8_t r,uint8_t g, uint8_t b)
 {
@@ -19,7 +19,7 @@ void draw_char(int x,int y, char text, uint8_t r,uint8_t g, uint8_t b)
 		{
 			if(ch & (1<<j))
 			{
-				setLedXY(x+i,y-j+4,r,g,b);
+				setLedXY(x+i,y+j+4,r,g,b);
 			}
 		}
 	}
@@ -40,7 +40,7 @@ void draw_number(uint8_t x, uint8_t y, int32_t number, uint8_t length, uint8_t p
 {
 
 	char s[10];
-	sprintf(s, "%i", number);
+	sprintf(s, "%lu", number);
 	int len = strlen(s);
 
 	if (length < len) {

@@ -7,6 +7,7 @@
 #include "main.h"
 #include "ssd1351.h"
 #include "circle.h"
+#include "text.h"
 /*
  *
  * http://arduino.cc/en/Main/ArduinoBoardNano
@@ -41,11 +42,6 @@ int main(void)
 {
 
 	lcdInit();
-//	lcdTest();
-
-	/*while(1)
-	{
-	};*/
 
 	while(1)
 	{
@@ -55,7 +51,8 @@ int main(void)
 //			{
 //  lcdFillRGB(colorsRGB24toRGB565( x*2, y*2,0));
 				//lcdDrawPixel(x,y,  colorsRGB24toRGB565( 255,255,255));
-				draw_filledCircle(64,64,62,x*2,(127-x)*2,0);
+				draw_filledCircle(64,64,42,x*2,(127-x)*2,0);
+				draw_text(5,5,"Hallo",255,0,0);
 //				_delay_ms(3100);
 //			}
 		}

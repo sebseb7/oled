@@ -88,9 +88,8 @@ enum
   SSD1351_CMD_STARTMOVING               = 0x9F  
 };
 
-void lcdFillRGB(uint16_t data);
+void lcdFillRGB(uint8_t r,uint8_t g,uint8_t b);
 void lcdInit(void);
-void lcdTest(void);
 void setLedXY(uint8_t x,uint8_t  y, uint8_t r,uint8_t g,uint8_t b);
 
 #endif

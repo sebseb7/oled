@@ -238,7 +238,7 @@ void lcdInit(void)
     DATA(0xBF);
 
   // Clear screen
-  lcdFillRGB(COLOR_BLACK);
+  lcdFillRGB(0,0,0);
 
   // Turn the display on
   CMD(SSD1351_CMD_SLEEPMODE_DISPLAYON);  
@@ -247,47 +247,22 @@ void lcdInit(void)
 
 /**************************************************************************/
 /*! 
-    @brief  Renders a simple test pattern on the LCD
-*/
-/**************************************************************************/
-void lcdTest(void)
-{
-  uint32_t i,j;
-  CMD(SSD1351_CMD_WRITERAM);
-  ssd1351SetCursor(0, 0);
-  CMD(SSD1351_CMD_WRITERAM);
-  
-  for(i=0;i<128;i++)
-  {
-    for(j=0;j<128;j++)
-    {
-      if(i>111){DATA(COLOR_WHITE>>8);DATA((uint8_t)COLOR_WHITE);}
-      else if(i>95){DATA(COLOR_BLUE>>8);DATA((uint8_t)COLOR_BLUE);}
-      else if(i>79){DATA(COLOR_GREEN>>8);DATA((uint8_t)COLOR_GREEN);}
-      else if(i>63){DATA(COLOR_CYAN>>8);DATA((uint8_t)COLOR_CYAN);}
-      else if(i>47){DATA(COLOR_RED>>8);DATA((uint8_t)COLOR_RED);}
-      else if(i>31){DATA(COLOR_MAGENTA>>8);DATA((uint8_t)COLOR_MAGENTA);}
-      else if(i>15){DATA(COLOR_YELLOW>>8);DATA((uint8_t)COLOR_YELLOW);}
-      else {DATA(COLOR_BLACK>>8);DATA((uint8_t)COLOR_BLACK);}
-    }
-  }
-}
-
-/**************************************************************************/
-/*! 
     @brief  Fills the LCD with the specified 16-bit color
 */
 /**************************************************************************/
-void lcdFillRGB(uint16_t data)
+void lcdFillRGB(uint8_t r,uint8_t g,uint8_t b)
 {
-	// display crashes
-  uint16_t i;
-  ssd1351SetCursor(0, 0);
-  for (i=1; i<=((ssd1351Properties.width)*(ssd1351Properties.height)) * 2;i++)
-  {
-    DATA(data >> 8);
-    DATA(data);
-  }
+	uint16_t i;
+	ssd1351SetCursor(0, 0);
+
+	uint8_t data1 = (r&0xF8) | (g>>5);
+	uint8_t data2 = (b>>3) | ((g>>2)<<5);
+
+	for (i=1; i<=((ssd1351Properties.width)*(ssd1351Properties.height)) * 2;i++)
+	{
+  		DATA(data1);
+		DATA(data2);
+	}
 }
 
 /**************************************************************************/
