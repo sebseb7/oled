@@ -26,7 +26,7 @@ HEADERS=$(wildcard *.h)
 
 
 #  Compiler Options
-GCFLAGS = -mmcu=$(MCU) -I. -gstabs -DF_CPU=20000000 -O2 -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -Wall -Wstrict-prototypes  -std=gnu99 -MD -MP
+GCFLAGS = -mmcu=$(MCU) -I. -gstabs -DF_CPU=16000000 -O2 -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -Wall -Wstrict-prototypes  -std=gnu99 -MD -MP
 #LDFLAGS =  -Wl,-Map=pwbl.map,--cref    -lm -Wl,--section-start=.text=0x1800
 LDFLAGS = -mmcu=$(MCU)  
 
@@ -63,5 +63,6 @@ clean:
 #########################################################################
 
 flash: all
-	avrdude  -p $(MCU_AVRDUDE) -c arduino -P $(USB_DEVICE) -b19200 -U flash:w:$(PROJECT).hex
-
+	avrdude -p m168 -c STK500v2 -P /dev/cu.SLAB_USBtoUART -U flash:w:$(PROJECT).hex
+#	avrdude  -p $(MCU_AVRDUDE) -c arduino -P $(USB_DEVICE) -b19200 -U flash:w:$(PROJECT).hex
+#avrdude -p m168 -c STK500v2 -P /dev/cu.SLAB_USBtoUART -U lfuse:w:0xf7:m -U hfuse:w:0xdc:m -U efuse:w:0x01:m
