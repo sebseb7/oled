@@ -52,7 +52,10 @@ int main(void)
 //  lcdFillRGB(colorsRGB24toRGB565( x*2, y*2,0));
 				//lcdDrawPixel(x,y,  colorsRGB24toRGB565( 255,255,255));
 				draw_filledCircle(64,64,42,x*2,(127-x)*2,0);
-				draw_text(5,5,"Hallo",255,0,0);
+				draw_text(5,5,"<<</>>",255,0,0);
+				draw_text(90,5,"chaos",0,255,0);
+				draw_text(5,110,"23",0,0,255);
+				draw_text(90,110,"42",255,255,0);
 //				_delay_ms(3100);
 //			}
 		}
