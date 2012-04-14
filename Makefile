@@ -31,8 +31,10 @@ GCFLAGS = -mmcu=$(MCU) -Wa,-adhlns=$(<:.c=.lst) -I. -gstabs -DF_CPU=16000000 -O2
 #LDFLAGS =  -Wl,-Map=pwbl.map,--cref    -lm -Wl,--section-start=.text=0x1800
 LDFLAGS = -mmcu=$(MCU)  
 
+
 #  Compiler Paths
 GCC = avr-gcc
+LD = avr-gcc
 REMOVE = rm -f
 SIZE = avr-size
 OBJCOPY = avr-objcopy
@@ -45,7 +47,7 @@ $(PROJECT).hex: $(PROJECT).elf Makefile
 	$(OBJCOPY) -R .eeprom -O ihex $(PROJECT).elf $(PROJECT).hex 
 
 $(PROJECT).elf: $(OBJECTS) Makefile
-	$(GCC) $(LDFLAGS) $(OBJECTS) -o $(PROJECT).elf
+	$(LD) $(LDFLAGS) $(OBJECTS) -o $(PROJECT).elf
 
 stats: $(PROJECT).elf Makefile
 	$(SIZE) -C --mcu=$(MCU) $(PROJECT).elf

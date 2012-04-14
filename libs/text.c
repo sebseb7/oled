@@ -12,7 +12,11 @@ void draw_char(int x,int y, char text, uint8_t r,uint8_t g, uint8_t b)
 	int i;
 	for (i = 0; i < 6; i++)
 	{
-		char ch = font8x6[(int)text][i];
+#ifdef __AVR__
+		char ch = pgm_read_byte(&font8x6[(int)text][i]);
+#else
+		char ch =                font8x6[(int)text][i];
+#endif
 
 		int j;
 		for (j = 0; j < 8; j++)

@@ -141,9 +141,9 @@ void lcdInit(void)
   DATA(0xB1);                               // Make all commands accessible 
   CMD(SSD1351_CMD_SLEEPMODE_DISPLAYOFF);
   CMD(SSD1351_CMD_SETFRONTCLOCKDIV);
-  DATA(0x80);//was F1
+  DATA(0xF1);//was F1
   CMD(SSD1351_CMD_SETMUXRRATIO);
-  DATA(0x7F);//7f
+  DATA(0x7f);//7f
   CMD(SSD1351_CMD_COLORDEPTH);
   DATA(0x74);                               // Bit 7:6 = 65,536 Colors, Bit 3 = BGR or RGB
   CMD(SSD1351_CMD_SETCOLUMNADDRESS);
@@ -182,18 +182,21 @@ void lcdInit(void)
 
   // Use default grayscale for now to save flash space (1k), but here are
   // the values if someone wants to change them ...
- /*   CMD(SSD1351_CMD_GRAYSCALELOOKUP);
-    DATA(0x02);
-    DATA(0x03);
-    DATA(0x04);
+    CMD(SSD1351_CMD_GRAYSCALELOOKUP);
+	
+/*	for(uint8_t i = 1;i < 64; i++)
+	{
+	    SET_CS; CLR_CS; SET_DC; ssd1351SendByte( i+12, 0 );SET_CS;
+	}
+*/
     DATA(0x05);
     DATA(0x06);
     DATA(0x07);
     DATA(0x08);
     DATA(0x09);
-    DATA(0x0A);
-    DATA(0x0B);
-    DATA(0x0C);
+    DATA(0x0a);
+    DATA(0x0b);
+    DATA(0x0c);
     DATA(0x0D);
     DATA(0x0E);
     DATA(0x0F);
@@ -201,10 +204,13 @@ void lcdInit(void)
     DATA(0x11);
     DATA(0x12);
     DATA(0x13);
+    DATA(0x14);
     DATA(0x15);
-    DATA(0x17);
-    DATA(0x19);
-    DATA(0x1B);
+    DATA(0x16);
+    DATA(0x18);
+    DATA(0x1a);
+    DATA(0x1b);
+    DATA(0x1C);
     DATA(0x1D);
     DATA(0x1F);
     DATA(0x21);
@@ -245,7 +251,7 @@ void lcdInit(void)
     DATA(0xA5);
     DATA(0xAA);
     DATA(0xAF);
-    DATA(0xBF);*/
+    DATA(0xBF);
 
   // Clear screen
   lcdFillRGB(0,0,0);
@@ -260,18 +266,92 @@ void lcdInit(void)
     @brief  Fills the LCD with the specified 16-bit color
 */
 /**************************************************************************/
+void lcdFillRGBdither(uint8_t r,uint8_t g,uint8_t b,uint8_t r2,uint8_t g2,uint8_t b2,uint8_t val)
+{
+	uint8_t i,j;
+	ssd1351SetCursor(0, 0);
+
+	uint8_t data1 = (r&0xF8) | (g>>5);
+	uint8_t data2 = (b>>3) | ((g>>2)<<5);
+	uint8_t data3 = (r2&0xF8) | (g2>>5);
+	uint8_t data4 = (b2>>3) | ((g2>>2)<<5);
+
+	if(val == 1)
+	{
+		for (i=1; i<=64 ;i++)
+		{
+			for (j=1; j<=64 ;j++)
+			{
+		  		DATA(data1);
+				DATA(data2);
+				DATA(data3);
+				DATA(data4);
+			}
+			for (j=1; j<=64 ;j++)
+			{
+				DATA(data1);
+				DATA(data2);
+	  			DATA(data1);
+				DATA(data2);
+			}
+		}
+	}
+	if(val == 2)
+	{
+		for (i=1; i<=64 ;i++)
+		{
+			for (j=1; j<=64 ;j++)
+			{
+		  		DATA(data1);
+				DATA(data2);
+				DATA(data3);
+				DATA(data4);
+			}
+			for (j=1; j<=64 ;j++)
+			{
+				DATA(data3);
+				DATA(data4);
+	  			DATA(data1);
+				DATA(data2);
+			}
+		}
+	}
+	if(val == 3)
+	{
+		for (i=1; i<=64 ;i++)
+		{
+			for (j=1; j<=64 ;j++)
+			{
+		  		DATA(data3);
+				DATA(data4);
+				DATA(data3);
+				DATA(data4);
+			}
+			for (j=1; j<=64 ;j++)
+			{
+				DATA(data3);
+				DATA(data4);
+	  			DATA(data1);
+				DATA(data2);
+			}
+		}
+	}
+}
 void lcdFillRGB(uint8_t r,uint8_t g,uint8_t b)
 {
-	uint16_t i;
+	uint8_t x,y;
 	ssd1351SetCursor(0, 0);
 
 	uint8_t data1 = (r&0xF8) | (g>>5);
 	uint8_t data2 = (b>>3) | ((g>>2)<<5);
 
-	for (i=1; i<=((ssd1351Properties.width)*(ssd1351Properties.height)) * 2;i++)
+	for (x=1; x<=ssd1351Properties.width ;x++)
 	{
-  		DATA(data1);
-		DATA(data2);
+		for (y=1; y<= ssd1351Properties.height;y++)
+		{
+  			DATA(data1);
+			DATA(data2);
+		}
 	}
 }
 

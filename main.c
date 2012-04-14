@@ -38,7 +38,49 @@ int main(void)
 {
 
 	lcdInit();
+		while(1)
+		{
+			setLedXY(0,0,255,255,255);
+			for(uint8_t i = 0;i<127;i++)
+			{
+				setLedXY(i+1,0,i*2,0,0);
+				setLedXY(i+1,1,i*2,0,0);
+				setLedXY(i+1,2,i*2,0,0);
+				setLedXY(i+1,3,i*2,0,0);
+				
+				setLedXY(i+1,4,0,i*2,0);
+				setLedXY(i+1,5,0,i*2,0);
+				setLedXY(i+1,6,0,i*2,0);
+				setLedXY(i+1,7,0,i*2,0);
+				
+				setLedXY(i+1,8,0,0,i*2);
+				setLedXY(i+1,9,0,0,i*2);
+				setLedXY(i+1,10,0,0,i*2);
+				setLedXY(i+1,11,0,0,i*2);
+			}
+		}
+			
 	
+
+
+		/*		while(1)
+				{
+				lcdFillRGB(255,0,0);_delay_ms(2000);
+				lcdFillRGB(24,0,0);_delay_ms(2000);
+				lcdFillRGB(0,0,23);_delay_ms(2000);
+				lcdFillRGB(0,15,0);_delay_ms(2000);
+				lcdFillRGB(0,255,0);_delay_ms(2000);
+				lcdFillRGB(0,0,0);_delay_ms(2000);
+				
+				}*//*_delay_ms(1000);
+				lcdFillRGBdither(0,0,0,0,68,0,1);_delay_ms(1000);
+				lcdFillRGBdither(0,0,0,0,68,0,2);_delay_ms(1000);
+				lcdFillRGBdither(0,0,0,0,68,0,3);_delay_ms(1000);
+				lcdFillRGB(0,68,0);_delay_ms(1000);
+				lcdFillRGBdither(0,68,0,0,0,0,1);_delay_ms(1000);
+				lcdFillRGBdither(0,68,0,0,0,0,2);_delay_ms(1000);
+				lcdFillRGBdither(0,68,0,0,0,0,3);_delay_ms(1000);
+	}*/
 /*	while(1)
 	{
 				lcdFillRGB(200,0,0);
@@ -49,20 +91,24 @@ int main(void)
 
 	while(1)
 	{
-		lcdFillRGB(0,0,0);
-		for(uint8_t x = 0;x < 32;x++)
+		for(uint8_t x = 0;x < 255;x++)
 		{
-				draw_filledCircle(64,64,28,x<<3,254-(x<<3),0);
+				draw_filledCircle(64,64,28,x,254-(x),0);
 				draw_text(5,5,"<<</>>",255,0,0);
 				draw_text(90,5,"chaos",0,255,0);
 				draw_text(5,110,"23",0,0,255);
 				draw_text(90,110,"42",255,255,0);
 		}
-		for(uint8_t x = 0;x < 128;x+=8)
+		for(uint8_t x = 0;x < 128;x+=32)
 		{
-			for(uint8_t y = 0; y < 128; y+=8)
+			//16 fps
+			for(uint8_t y = 0; y < 128; y+=2)
 			{
 				lcdFillRGB(0,y*2,x*2);
+				lcdFillRGBdither(0,y*2,x*2,0,(y+1)*2,x*2,1);
+				lcdFillRGBdither(0,y*2,x*2,0,(y+1)*2,x*2,2);
+				lcdFillRGBdither(0,y*2,x*2,0,(y+1)*2,x*2,3);
+				lcdFillRGB(0,(y+1)*2,x*2);
 				//fi
 			//setLedXY(x,y,x*2,y*2,0);
 			}
