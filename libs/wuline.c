@@ -3,6 +3,8 @@
  */
 
 
+// 3k code on avr
+
 
 #include "stdio.h"
 #include "ssd1351.h"

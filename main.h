@@ -1,6 +1,10 @@
 #ifndef _MAIN_H
 #define _MAIN_H
 
+#include <inttypes.h>
+#include <avr/io.h>
+//#include <avr/interrupt.h>
+#include <util/delay.h>
 
 
 /*

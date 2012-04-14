@@ -21,12 +21,13 @@ endif
 SRC=$(wildcard *.c libs/*.c)
 OBJECTS=$(SRC:.c=.o) 
 DFILES=$(SRC:.c=.d) 
+LSTFILES=$(SRC:.c=.lst) 
 HEADERS=$(wildcard *.h libs/*.h)
 
 
 
 #  Compiler Options
-GCFLAGS = -mmcu=$(MCU) -I. -gstabs -DF_CPU=16000000 -O2 -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -Wall -Wstrict-prototypes  -std=gnu99 -MD -MP -Ilibs
+GCFLAGS = -mmcu=$(MCU) -Wa,-adhlns=$(<:.c=.lst) -I. -gstabs -DF_CPU=16000000 -O2 -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -Wall -Wstrict-prototypes  -std=gnu99 -MD -MP -Ilibs
 #LDFLAGS =  -Wl,-Map=pwbl.map,--cref    -lm -Wl,--section-start=.text=0x1800
 LDFLAGS = -mmcu=$(MCU)  
 
@@ -47,12 +48,13 @@ $(PROJECT).elf: $(OBJECTS) Makefile
 	$(GCC) $(LDFLAGS) $(OBJECTS) -o $(PROJECT).elf
 
 stats: $(PROJECT).elf Makefile
-	$(SIZE) $(PROJECT).elf
+	$(SIZE) -C --mcu=$(MCU) $(PROJECT).elf
 
 clean:
 	$(REMOVE) $(OBJECTS)
 	$(REMOVE) $(PROJECT).hex
 	$(REMOVE) $(DFILES)
+	$(REMOVE) $(LSTFILES)
 	$(REMOVE) $(PROJECT).elf
 
 #########################################################################

@@ -1,8 +1,7 @@
 #ifndef __SSD1351_H__
 #define __SSD1351_H__
 
-#include <inttypes.h>
-#include <avr/io.h>
+#include "main.h"
 
 typedef struct
 {

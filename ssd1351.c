@@ -170,7 +170,7 @@ void lcdInit(void)
   DATA(0x01);
   CMD(SSD1351_CMD_SETDISPLAYMODE_RESET);
 
-  // Use default grayscale for now to save flash space, but here are
+  // Use default grayscale for now to save flash space (1k), but here are
   // the values if someone wants to change them ...
     CMD(SSD1351_CMD_GRAYSCALELOOKUP);
     DATA(0x02);
