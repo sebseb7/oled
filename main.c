@@ -38,22 +38,34 @@ int main(void)
 {
 
 	lcdInit();
+	
+/*	while(1)
+	{
+				lcdFillRGB(200,0,0);
+				lcdFillRGB(0,200,0);
+				lcdFillRGB(0,0,200);
+	}*/
+
 
 	while(1)
 	{
-		for(uint8_t x = 0;x < 128;x+=8)
+		lcdFillRGB(0,0,0);
+		for(uint8_t x = 0;x < 32;x++)
 		{
-//			for(uint8_t y = 0; y < 128; y++)
-//			{
-//  lcdFillRGB(colorsRGB24toRGB565( x*2, y*2,0));
-				//lcdDrawPixel(x,y,  colorsRGB24toRGB565( 255,255,255));
-				draw_filledCircle(64,64,42,x*2,(127-x)*2,0);
+				draw_filledCircle(64,64,28,x<<3,254-(x<<3),0);
 				draw_text(5,5,"<<</>>",255,0,0);
 				draw_text(90,5,"chaos",0,255,0);
 				draw_text(5,110,"23",0,0,255);
 				draw_text(90,110,"42",255,255,0);
-//				_delay_ms(3100);
-//			}
+		}
+		for(uint8_t x = 0;x < 128;x+=8)
+		{
+			for(uint8_t y = 0; y < 128; y+=8)
+			{
+				lcdFillRGB(0,y*2,x*2);
+				//fi
+			//setLedXY(x,y,x*2,y*2,0);
+			}
 		}
 		for(uint8_t x = 0;x < 128;x++)
 		{

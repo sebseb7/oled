@@ -27,8 +27,8 @@ typedef struct
     To select one of the SPI modes, make sure the BS0/1 pins are correctly
     set on the OLED display and uncomment the appropriate define below.
     -----------------------------------------------------------------------*/
-    #define SSD1351_BUS_SPI3
-  //  #define SSD1351_BUS_SPI4
+  //  #define SSD1351_BUS_SPI3
+    #define SSD1351_BUS_SPI4
 /*=========================================================================*/
 
 // Macros for control line state

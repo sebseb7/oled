@@ -92,7 +92,7 @@ void draw_filledCircle(
 
 			}else if(dist < rad)
 			{
-			/*	dla_plot(y-j,x+i,r,g,b,1-(dist-rad+1));
+				dla_plot(y-j,x+i,r,g,b,1-(dist-rad+1));
 				dla_plot(y+j,x+i,r,g,b,1-(dist-rad+1));
 				dla_plot(y+j,x-i,r,g,b,1-(dist-rad+1));
 				dla_plot(y-j,x-i,r,g,b,1-(dist-rad+1));
@@ -100,7 +100,7 @@ void draw_filledCircle(
 				dla_plot(y-i,x+j,r,g,b,1-(dist-rad+1));
 				dla_plot(y+i,x+j,r,g,b,1-(dist-rad+1));
 				dla_plot(y+i,x-j,r,g,b,1-(dist-rad+1));
-				dla_plot(y-i,x-j,r,g,b,1-(dist-rad+1));*/
+				dla_plot(y-i,x-j,r,g,b,1-(dist-rad+1));
 			}
 		}
 	}
