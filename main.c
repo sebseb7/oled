@@ -4,6 +4,7 @@
 #include "ssd1351.h"
 #include "circle.h"
 #include "text.h"
+#include "usart.h"
 /*
  *
  * http://arduino.cc/en/Main/ArduinoBoardNano
@@ -36,9 +37,23 @@
 
 int main(void)
 {
+	USART0_Init();
 
 	lcdInit();
-		while(1)
+
+	uint8_t data = 0;
+				
+				lcdFillRGB(0,255,0);
+
+	while(1)
+	{
+		if(USART0_Getc_nb(&data))
+		{
+				lcdFillRGB(0,0,data);
+		}
+	}
+
+	while(1)
 		{
 			setLedXY(0,0,255,255,255);
 			for(uint8_t i = 0;i<127;i++)
