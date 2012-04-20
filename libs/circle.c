@@ -2,7 +2,6 @@
 #include "main.h"
 #include <math.h>
 
-#include "ssd1351.h"
 static void dla_plot(int x, int y, uint8_t r,uint8_t g , uint8_t b, float br)
 {
 	uint8_t o_red = 0;

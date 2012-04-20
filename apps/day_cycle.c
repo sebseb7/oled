@@ -42,9 +42,9 @@ static uint8_t tick(void) {
 
 	printf("%03i %03i %03i\n",r,g,b);
 
-	draw_number(50,62,hour,2,'0',255,255,255);
-	draw_text(  62,62,":",255,255,255);
-	draw_number(68,62,minute,2,'0',255,255,255);
+	draw_number(50,58,hour,2,'0',255,255,255);
+	draw_text(  62,58,":",255,255,255);
+	draw_number(68,58,minute,2,'0',255,255,255);
 
 	return 0;
 }

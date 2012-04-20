@@ -6,11 +6,23 @@
 #include <SDL/SDL.h>
 
 #include "main.h"
-#include "ssd1351.h"
 
 #include<unistd.h>
 #include<sys/time.h>
 
+#include <fcntl.h>
+#include <termios.h>
+#include <string.h>
+
+
+#if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
+#include <sys/ioctl.h>
+#include <IOKit/serial/ioss.h>
+#include <errno.h>
+#endif
+
+
+int tty_fd;
 
 unsigned long long int get_clock(void)
 {
@@ -54,6 +66,31 @@ void registerAnimation(tick_fun tick, uint16_t t, uint16_t ignore)
 int main(int argc, char *argv[]) {
 	int x, y;
 
+        struct termios tio;
+ 
+ 
+        memset(&tio,0,sizeof(tio));
+        tio.c_iflag=0;
+        tio.c_oflag=0;
+        tio.c_cflag=CS8|CREAD|CLOCAL;           // 8n1, see termios.h for more information
+        tio.c_lflag=0;
+        tio.c_cc[VMIN]=1;
+        tio.c_cc[VTIME]=5;
+ 
+        tty_fd=open("/dev/cu.usbserial-A6008jMH", O_RDWR | O_NONBLOCK);      
+        cfsetospeed(&tio,B38400);            // 115200 baud
+        cfsetispeed(&tio,B38400);            // 115200 baud
+#if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
+		speed_t speed = 38400;
+		if ( ioctl( tty_fd,	 IOSSIOSPEED, &speed ) == -1 )
+		{
+			printf( "Error %d calling ioctl( ..., IOSSIOSPEED, ... )\n", errno );
+		}
+#warning osx
+
+#else
+#endif 
+        tcsetattr(tty_fd,TCSANOW,&tio);
 	for(x = 0; x < LED_WIDTH; x++) {
 		for(y = 0; y < LED_HEIGHT; y++) {
 			leds[y][x][0]=0;
@@ -95,19 +132,31 @@ int main(int argc, char *argv[]) {
 
 		running &= !tick_fp();
 
+	//	char cmd1[] = {49,49,51}; 
+	//	write(tty_fd,&cmd1,3);
+		
+		
 		for(x = 0; x < LED_WIDTH; x++) {
 			for(y = 0; y < LED_HEIGHT; y++) {
 
 				if(leds[y][x][3] == 1)
 				{
 
-					SDL_Rect rect = { ZOOM*x+(ZOOM/15), ZOOM*(LED_HEIGHT - y - 1)+(ZOOM/15), ZOOM-(ZOOM/15), ZOOM-(ZOOM/15) };
+					SDL_Rect rect = { ZOOM*x+(ZOOM/15), ZOOM*( y )+(ZOOM/15), ZOOM-(ZOOM/15), ZOOM-(ZOOM/15) };
 					SDL_FillRect(
 						screen, 
 						&rect, 
 						SDL_MapRGB(screen->format, leds[y][x][0],leds[y][x][1],leds[y][x][2])
 					);
 					leds[y][x][3] = 0;
+			
+					if((x==40)&&(y==40))
+					{
+						char cmd1[] = {1|((leds[y][x][0]>>2)<<2),2|((leds[y][x][1]>>2)<<2),3|((leds[y][x][2]>>2)<<2)}; 
+						write(tty_fd,&cmd1,3);
+						tcdrain(tty_fd);
+					}
+
 
 				}
 

@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #include "font8x6.h"
-#include "ssd1351.h"
+#include "main.h"
 
 void draw_char(int x,int y, char text, uint8_t r,uint8_t g, uint8_t b)
 {

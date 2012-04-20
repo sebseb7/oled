@@ -7,7 +7,7 @@
 #define LED_HEIGHT	128
 
 // multiple of 15
-#define ZOOM 6
+#define ZOOM 2
 
 
 #define SIMULATOR
@@ -18,6 +18,7 @@ typedef uint8_t (*tick_fun)(void);
 
 void registerAnimation(tick_fun tick, uint16_t t, uint16_t duration);
 void registerApp(tick_fun tick, uint16_t t);
+void setLedXY(uint8_t x,uint8_t  y, uint8_t r,uint8_t g,uint8_t b);
 
 #endif
 

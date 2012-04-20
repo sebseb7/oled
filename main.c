@@ -56,60 +56,19 @@ int main(void)
 	{
 		if(USART0_Getc_nb(&data))
 		{
-			if(data == 49)
+			if((data & 3) == 1)
 			{
-				r+=4;
-				USART0_putc(82);
-				USART0_putc(((r-(r%100))/100)+48);
-				USART0_putc((((r-(r%10))/10)%10)+48);
-				USART0_putc((r%10)+48);
-				USART0_putc(10);
+				r = (data>>2)<<2;
 			}
-			if(data == 50)
+			if((data & 3) == 2)
 			{
-				r-=4;
-				USART0_putc(82);
-				USART0_putc(((r-(r%100))/100)+48);
-				USART0_putc((((r-(r%10))/10)%10)+48);
-				USART0_putc((r%10)+48);
-				USART0_putc(10);
+				g = (data>>2)<<2;
 			}
-			if(data == 51)
+			if((data & 3) == 3)
 			{
-				g+=4;
-				USART0_putc(71);
-				USART0_putc(((g-(g%100))/100)+48);
-				USART0_putc((((g-(g%10))/10)%10)+48);
-				USART0_putc((g%10)+48);
-				USART0_putc(13);
+				b = (data>>2)<<2;
 			}
-			if(data == 52)
-			{
-				g-=4;
-				USART0_putc(71);
-				USART0_putc(((g-(g%100))/100)+48);
-				USART0_putc((((g-(g%10))/10)%10)+48);
-				USART0_putc((g%10)+48);
-				USART0_putc(13);
-			}
-			if(data == 53)
-			{
-				b+=4;
-				USART0_putc(66);
-				USART0_putc(((b-(b%100))/100)+48);
-				USART0_putc((((b-(b%10))/10)%10)+48);
-				USART0_putc((b%10)+48);
-				USART0_putc(13);
-			}
-			if(data == 54)
-			{
-				b-=4;
-				USART0_putc(66);
-				USART0_putc(((b-(b%100))/100)+48);
-				USART0_putc((((b-(b%10))/10)%10)+48);
-				USART0_putc((b%10)+48);
-				USART0_putc(13);
-			}
+
 				lcdFillRGB(r,g,b);
 		}
 	}
