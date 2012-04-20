@@ -60,16 +60,16 @@ int main(void)
 			{
 				r = (data>>2)<<2;
 			}
-			if((data & 3) == 2)
+			else if((data & 3) == 2)
 			{
 				g = (data>>2)<<2;
 			}
-			if((data & 3) == 3)
+			else if((data & 3) == 3)
 			{
 				b = (data>>2)<<2;
 			}
 
-				lcdFillRGB(r,g,b);
+			lcdFillRGB(r,g,b);
 		}
 	}
 
@@ -159,6 +159,8 @@ int main(void)
 		
 	}
 }
+
+
 
 
 
