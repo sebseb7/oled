@@ -23,6 +23,7 @@
 
 
 int tty_fd;
+int sdlpause = 0;
 
 unsigned long long int get_clock(void)
 {
@@ -35,6 +36,7 @@ unsigned long long int get_clock(void)
 int leds[LED_HEIGHT][LED_WIDTH][4];
 int interval;
 tick_fun tick_fp;
+key_fun key_fp;
 SDL_Surface* screen;
 
 void setLedXY(uint8_t x, uint8_t y, uint8_t red,uint8_t green, uint8_t blue) {
@@ -53,9 +55,10 @@ void getLedXY(uint8_t x, uint8_t y, uint8_t* red,uint8_t* green, uint8_t* blue) 
 	*blue = leds[y][x][2];
 }
 
-void registerAnimation(tick_fun tick, uint16_t t, uint16_t ignore)
+void registerAnimation(tick_fun tick,key_fun key, uint16_t t, uint16_t ignore)
 {
 	tick_fp = tick;
+	key_fp = key;
 
 	assert(t > 0);
 	// 122Hz / tick
@@ -109,6 +112,11 @@ int main(int argc, char *argv[]) {
 	SDL_FillRect(screen, &rect, SDL_MapRGB(screen->format, 0x20,0x20,0x20));
 
 
+	int last_r = 0;
+	int last_g = 0;
+	int last_b = 0;
+
+
 	int running = 1;
 	unsigned long long int startTime = get_clock();
 	while(running) {
@@ -119,11 +127,34 @@ int main(int argc, char *argv[]) {
 					running = 0;
 					break;
 				case SDL_KEYUP:
+					break;
 				case SDL_KEYDOWN:
 					switch(ev.key.keysym.sym) {
 						case SDLK_ESCAPE:
 							running = 0;
 							break;
+						case SDLK_SPACE:
+							if(sdlpause == 0)
+							{
+								sdlpause = 1;
+							}
+							else{
+								sdlpause = 0;
+							}
+							break;
+						case SDLK_1:
+							key_fp(1);
+							break;
+						case SDLK_2:
+							key_fp(2);
+							break;
+						case SDLK_3:
+							key_fp(3);
+							break;
+						case SDLK_4:
+							key_fp(4);
+							break;
+							
 						default: break;
 					}
 				default: break;
@@ -134,6 +165,9 @@ int main(int argc, char *argv[]) {
 
 	//	char cmd1[] = {49,49,51}; 
 	//	write(tty_fd,&cmd1,3);
+		
+		
+		
 		
 		
 		for(x = 0; x < LED_WIDTH; x++) {
@@ -152,9 +186,55 @@ int main(int argc, char *argv[]) {
 			
 					if((x==40)&&(y==40))
 					{
-						char cmd1[] = {1|((leds[y][x][0]>>2)<<2),2|((leds[y][x][1]>>2)<<2),3|((leds[y][x][2]>>2)<<2)}; 
-						write(tty_fd,&cmd1,3);
-						tcdrain(tty_fd);
+						int r = leds[y][x][0];
+						int g = leds[y][x][1];
+						int b = leds[y][x][2];
+					
+						r += 23;
+						g += 23;
+						b += 23;
+						
+						if(r>255)
+						{
+							r=255;
+						}
+						if(g>255)
+						{
+							g=255;
+						}
+						if(b>255)
+						{
+							b=255;
+						}
+					
+					
+						printf("%x %x %x\n",1|((r>>2)<<2),2|((g>>2)<<2),3|((b>>2)<<2));
+					
+//						char cmd1[] = {1|((r>>2)<<2),2|((g>>2)<<2),3|((b>>2)<<2)}; 
+						if(last_r != r)
+						{
+							char cmd1[] = {1|((r>>2)<<2)}; 
+							write(tty_fd,&cmd1,1);
+							usleep(1000);
+						}
+						if(last_g != g)
+						{
+							char cmd2[] = {2|((g>>2)<<2)}; 
+							write(tty_fd,&cmd2,1);
+							usleep(1000);
+						}
+						
+						if(last_b != b)
+						{
+							char cmd3[] = {3|((b>>2)<<2)}; 
+							write(tty_fd,&cmd3,1);
+							usleep(1000);
+						}
+						
+						last_r = r;
+						last_g = g;
+						last_b = b;
+						
 					}
 
 
