@@ -361,23 +361,67 @@ void lcdFillRGB(uint8_t r,uint8_t g,uint8_t b)
 
 void lcdFillRGB2(uint8_t r,uint8_t g,uint8_t b)
 {
+	uint8_t i,j;
 	uint8_t x,y;
 	ssd1351SetCursor(0, 0);
 
+	uint8_t r_d = (r&7)>>1;
+	uint8_t g_d = g&3;
+	uint8_t b_d = (b&7)>>1;
+
+	uint8_t r2=0;
+	uint8_t r3=0;
+	uint8_t r4=0;
+	uint8_t g2=0;
+	uint8_t g3=0;
+	uint8_t g4=0;
+	uint8_t b2=0;
+	uint8_t b3=0;
+	uint8_t b4=0;
+
+	if(r_d > 0)
+		r2=8;
+	if(r_d > 1)
+		r3=8;
+	if(r_d > 2)
+		r4=8;
+	if(g_d > 0)
+		g2=4;
+	if(g_d > 1)
+		g3=4;
+	if(g_d > 2)
+		g4=4;
+	if(b_d > 0)
+		b2=8;
+	if(b_d > 1)
+		b3=8;
+	if(b_d > 2)
+		b4=8;
+
+
+
+
+
 	uint8_t data1 = (r&0xF8) | (g>>5);
 	uint8_t data2 = (b>>3) | ((g>>2)<<5);
+	uint8_t data3 = ((r+r2)&0xF8) | ((g+g2)>>5);
+	uint8_t data4 = ((b+b2)>>3) | (((g+g2)>>2)<<5);
+	uint8_t data5 = ((r+r3)&0xF8) | ((g+g3)>>5);
+	uint8_t data6 = ((b+b3)>>3) | (((g+g3)>>2)<<5);
+	uint8_t data7 = ((r+r4)&0xF8) | ((g+g4)>>5);
+	uint8_t data8 = ((b+b4)>>3) | (((g+g4)>>2)<<5);
 
 	
 
-	for (x=1; x<=ssd1351Properties.width ;x++)
+/*	for (x=1; x<=ssd1351Properties.width ;x++)
 	{
 		for (y=1; y<= ssd1351Properties.height;y++)
 		{
   			DATA(data1);
 			DATA(data2);
 		}
-	}
-/*
+	}*/
+
 		for (i=1; i<=64 ;i++)
 		{
 			for (j=1; j<=64 ;j++)
@@ -394,7 +438,7 @@ void lcdFillRGB2(uint8_t r,uint8_t g,uint8_t b)
 	  			DATA(data7);
 				DATA(data8);
 			}
-		}*/
+		}
 
 }
 

@@ -75,7 +75,7 @@ int main(void)
 			if(stage == 3)
 			{
 				b = data;
-				lcdFillRGB(r,g,b);
+				lcdFillRGB2(r,g,b);
 			}
 
 			if(stage < 10)
