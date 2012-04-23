@@ -1,11 +1,14 @@
 UNAME := $(shell uname)
 
+COMPILER = gcc
+
 
 FLAGS=--std=gnu99 -Wall  -funsigned-char -Wundef -Wsign-compare -Wunreachable-code -pedantic  -Wstrict-prototypes
 LDFLAGS=
 BINEXT=
 
 ifeq ($(UNAME), Darwin)
+	COMPILER = clang
 	FLAGS   += -I/Library/Frameworks/SDL.framework/Headers
 	LDFLAGS +=   -framework SDL -framework Cocoa SDLmain.m
 endif
@@ -34,5 +37,5 @@ clean:
 	rm -f ${BINARIES}
 
 %$(BINEXT): ../apps/%.c main.c main.h Makefile $(LIB_HEADERS) $(LIB_SOURCES)
-	gcc $(FLAGS) main.c $(LDFLAGS) $< -o $@ -I. $(LIB_SOURCES) -I../libs
+	$(COMPILER) $(FLAGS) main.c $(LDFLAGS) $< -o $@ -I. $(LIB_SOURCES) -I../libs
 
