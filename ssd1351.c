@@ -118,12 +118,14 @@ void lcdInit(void)
 	DDRC |= (1<<PORTC3);
 #endif
 
-
+	//SS output
 	DDRB |= (1<<PORTB2);
 	SPCR |= (1<<SPE)|(1<<MSTR);
 	SPSR |= (1<<SPI2X);
   // Reset the LCD
-  SET_RST;
+
+
+	SET_RST;
   DELAY(20);
   CLR_RST;
   DELAY(200);
@@ -179,6 +181,7 @@ void lcdInit(void)
   CMD(SSD1351_CMD_SETSECONDPRECHARGEPERIOD);
   DATA(0x01);
   CMD(SSD1351_CMD_SETDISPLAYMODE_RESET);
+
 
   // Use default grayscale for now to save flash space (1k), but here are
   // the values if someone wants to change them ...
@@ -258,6 +261,7 @@ void lcdInit(void)
 
   // Turn the display on
   CMD(SSD1351_CMD_SLEEPMODE_DISPLAYON);  
+	return;
 }
 
 
@@ -353,6 +357,45 @@ void lcdFillRGB(uint8_t r,uint8_t g,uint8_t b)
 			DATA(data2);
 		}
 	}
+}
+
+void lcdFillRGB2(uint8_t r,uint8_t g,uint8_t b)
+{
+	uint8_t x,y;
+	ssd1351SetCursor(0, 0);
+
+	uint8_t data1 = (r&0xF8) | (g>>5);
+	uint8_t data2 = (b>>3) | ((g>>2)<<5);
+
+	
+
+	for (x=1; x<=ssd1351Properties.width ;x++)
+	{
+		for (y=1; y<= ssd1351Properties.height;y++)
+		{
+  			DATA(data1);
+			DATA(data2);
+		}
+	}
+/*
+		for (i=1; i<=64 ;i++)
+		{
+			for (j=1; j<=64 ;j++)
+			{
+		  		DATA(data1);
+				DATA(data2);
+				DATA(data3);
+				DATA(data4);
+			}
+			for (j=1; j<=64 ;j++)
+			{
+				DATA(data5);
+				DATA(data6);
+	  			DATA(data7);
+				DATA(data8);
+			}
+		}*/
+
 }
 
 /**************************************************************************/

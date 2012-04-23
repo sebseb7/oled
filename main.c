@@ -44,32 +44,43 @@ int main(void)
 
 	lcdInit();
 
+
+
 	uint8_t data = 0;
 				
-				lcdFillRGB(0,255,0);
+	lcdFillRGB(0,255,0);
 
 	uint8_t r = 0;
 	uint8_t g = 0;
 	uint8_t b = 0;
 
+	uint8_t stage = 10;
+
 	while(1)
 	{
 		if(USART0_Getc_nb(&data))
 		{
-			if((data & 3) == 1)
+			if(data == 0xff)
 			{
-				r = (data>>2)<<2;
+				stage = 0;
 			}
-			else if((data & 3) == 2)
+			if(stage == 1)
 			{
-				g = (data>>2)<<2;
+				r = data;
 			}
-			else if((data & 3) == 3)
+			if(stage == 2)
 			{
-				b = (data>>2)<<2;
+				g = data;
+			}
+			if(stage == 3)
+			{
+				b = data;
+				lcdFillRGB(r,g,b);
 			}
 
-			lcdFillRGB(r,g,b);
+			if(stage < 10)
+				stage++;
+
 		}
 	}
 

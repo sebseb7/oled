@@ -211,23 +211,29 @@ int main(int argc, char *argv[]) {
 						printf("%x %x %x\n",1|((r>>2)<<2),2|((g>>2)<<2),3|((b>>2)<<2));
 					
 //						char cmd1[] = {1|((r>>2)<<2),2|((g>>2)<<2),3|((b>>2)<<2)}; 
-						if(last_r != r)
+						if((last_r != r)||(last_g != g)||(last_b != b))
 						{
-							char cmd1[] = {1|((r>>2)<<2)}; 
+							if(r == 0xff)
+								r = 0xfe;
+							if(g == 0xff)
+								g = 0xfe;
+							if(b == 0xff)
+								b = 0xfe;
+							
+							char cmd1[] = {0xff}; 
 							write(tty_fd,&cmd1,1);
 							usleep(1000);
-						}
-						if(last_g != g)
-						{
-							char cmd2[] = {2|((g>>2)<<2)}; 
+							
+							char cmd2[] = {r}; 
 							write(tty_fd,&cmd2,1);
 							usleep(1000);
-						}
-						
-						if(last_b != b)
-						{
-							char cmd3[] = {3|((b>>2)<<2)}; 
+							
+							char cmd3[] = {g}; 
 							write(tty_fd,&cmd3,1);
+							usleep(1000);
+							
+							char cmd4[] = {b}; 
+							write(tty_fd,&cmd4,1);
 							usleep(1000);
 						}
 						
