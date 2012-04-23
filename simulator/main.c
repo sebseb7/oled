@@ -189,22 +189,25 @@ int main(int argc, char *argv[]) {
 						int r = leds[y][x][0];
 						int g = leds[y][x][1];
 						int b = leds[y][x][2];
-					
-						r += 23;
-						g += 23;
-						b += 23;
+				
+//						r=18;
+//						g=32;
+//						b=18;
+						r += 17;
+						g += 31;
+						b += 17;
 						
-						if(r>255)
+						if(r>245)
 						{
-							r=255;
+							r=245;
 						}
-						if(g>255)
+						if(g>245)
 						{
-							g=255;
+							g=245;
 						}
-						if(b>255)
+						if(b>245)
 						{
-							b=255;
+							b=245;
 						}
 					
 					
