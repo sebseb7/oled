@@ -3,6 +3,9 @@
 
 //http://www.nxp.com/documents/user_manual/UM10375.pdf
 
+//http://www.sparkfun.com/datasheets/LCD/NL128128C-EIF-2.pdf
+
+
 
 uint32_t msTicks = 0;
 
