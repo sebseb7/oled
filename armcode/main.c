@@ -23,12 +23,12 @@ int main(void) {
 
 
 	//configure all connections to the oled as output
-	LPC_GPIO0->DIR |= (1<<6)|(1<<7)|(1<<8)|(1<<9)|(1<<10)|(1<<11);	
-	LPC_GPIO1->DIR |= (1<<0)|(1<<1)|(1<<2)|(1<<10);	
-	LPC_GPIO2->DIR |= (1<<2)|(1<<5)|(1<<9)|(1<<10)|(1<<11);	
-	LPC_GPIO3->DIR |= (1<<0);	
+	LPC_GPIO0->DIR |= (1<<6)|(1<<7)|(1<<8)|(1<<11);				// D7  D6  D2  CS	
+	LPC_GPIO1->DIR |= (1<<0)|(1<<1)|(1<<2)|(1<<10);				// D/C RES BS1 E	
+	LPC_GPIO2->DIR |= (1<<2)|(1<<5)|(1<<9)|(1<<10)|(1<<11);		// D3  D8  D5  D4  R/W
+	LPC_GPIO3->DIR |= (1<<0);									// BS2
 	
-	//set all pin that do not default to GPIO to GPIO
+	//set all pins that do not default to GPIO to GPIO
 	LPC_IOCON->SWCLK_PIO0_10 |= 1;        
 	LPC_IOCON->R_PIO0_11 |= 1;
 	LPC_IOCON->R_PIO1_0 |= 1;
