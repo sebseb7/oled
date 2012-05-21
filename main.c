@@ -45,7 +45,13 @@ int main(void)
 	lcdInit();
 
 
-
+/*	while(1)
+	{
+				lcdFillRGB(200,0,0);
+				lcdFillRGB(0,200,0);
+				lcdFillRGB(0,0,200);
+	}
+*/
 	uint8_t data = 0;
 				
 	lcdFillRGB(0,255,0);
