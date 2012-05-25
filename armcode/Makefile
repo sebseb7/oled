@@ -71,5 +71,5 @@ clean:
 flash: firmware.bin
 	cp firmware.bin /Volumes/CRP\ DISABLD
 	sync
-	diskutil eject /dev/disk3
+	diskutil eject /dev/disk2
 

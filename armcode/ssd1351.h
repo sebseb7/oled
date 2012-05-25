@@ -34,6 +34,10 @@ typedef struct
 // Macros for control line state
 
 
+#define SET_SCK	(LPC_GPIO0->DATA |= (1<<10))	
+#define CLR_SCK	(LPC_GPIO0->DATA &= ~(1<<10))
+#define SET_SID	(LPC_GPIO0->DATA |= (1<<9))	
+#define CLR_SID	(LPC_GPIO0->DATA &= ~(1<<9))
 #define SET_CS	(LPC_GPIO0->DATA |= (1<<11))	
 #define CLR_CS	(LPC_GPIO0->DATA &= ~(1<<11))
 #define SET_DC	(LPC_GPIO1->DATA |= (1<<0))	

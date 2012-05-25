@@ -1,5 +1,5 @@
 #include "ssd1351.h"
-#include "ssp.h"
+//#include "ssp.h"
 
 static lcdProperties_t ssd1351Properties = { 128, 128 };
 
@@ -25,10 +25,46 @@ static lcdProperties_t ssd1351Properties = { 128, 128 };
 void ssd1351SendByte(uint8_t byte, uint8_t command)
 {
 	//while ( (LPC_SSP0->SR & (SSPSR_TNF|SSPSR_BSY)) != SSPSR_TNF );
-	LPC_SSP0->DR = byte;
-	while ( (LPC_SSP0->SR & (SSPSR_BSY|SSPSR_RNE)) != SSPSR_RNE );
-	uint8_t Dummy = LPC_SSP0->DR;
+//	LPC_SSP0->DR = byte;
+//	while ( (LPC_SSP0->SR & (SSPSR_BSY|SSPSR_RNE)) != SSPSR_RNE );
+//	uint8_t Dummy = LPC_SSP0->DR;
  
+  int8_t i;
+
+  // Make sure clock pin starts high
+  SET_SCK;
+
+#if defined SSD1351_BUS_SPI3
+  // Prepend D/C bit (cmd = 0, data = 1)
+  CLR_SCK;
+  if (command)
+  {
+    CLR_SID;
+  }
+  else
+  {
+    SET_SID;
+  }
+  SET_SCK;
+#endif
+
+  // Write from MSB to LSB
+  for (i=7; i>=0; i--) 
+  {
+    // Set clock pin low
+    CLR_SCK;
+    // Set data pin high or low depending on the value of the current bit
+    if (byte & (1 << i))
+    {
+      SET_SID;
+    }
+    else
+    {
+      CLR_SID;
+    }
+    // Set clock pin high
+    SET_SCK;
+  }
 	//  while ( LPC_SSP0->SR & SSPSR_BSY );
 	//SSP_Send( 0, &byte, 1);
 }
@@ -66,8 +102,8 @@ void ssd1351SetCursor(uint8_t x, uint8_t y)
 void lcdInit(void)
 {
 
-  	SSP_IOConfig(0);	
-  	SSP_Init(0);			
+//  	SSP_IOConfig(0);	
+//  	SSP_Init(0);			
 
 	//Reset the LCD
 
