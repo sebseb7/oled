@@ -4,7 +4,7 @@
 //http://www.nxp.com/documents/user_manual/UM10375.pdf
 
 
-uint32_t msTicks = 0;
+volatile uint32_t msTicks = 0;
 
 void SysTick_Handler(void) {
 	msTicks++;
@@ -20,10 +20,12 @@ int main(void) {
 	
 	SystemCoreClockUpdate();
 	SysTick_Config(SystemCoreClock/1000);
+  
+  	//LPC_SYSCON->SYSAHBCLKCTRL |= (1<<6);
 
 
 	//configure all connections to the oled as output
-	LPC_GPIO0->DIR |= (1<<6)|(1<<7)|(1<<8)|(1<<11);				// D7  D6  D2  CS	
+	LPC_GPIO0->DIR |= (1<<6)|(1<<7)|(1<<8)|(1<<9)|(1<<10)|(1<<11);				// D7  D6  D2  D1 D0 CS	
 	LPC_GPIO1->DIR |= (1<<0)|(1<<1)|(1<<2)|(1<<10);				// D/C RES BS1 E	
 	LPC_GPIO2->DIR |= (1<<2)|(1<<5)|(1<<9)|(1<<10)|(1<<11);		// D3  D8  D5  D4  R/W
 	LPC_GPIO3->DIR |= (1<<0);									// BS2
@@ -57,6 +59,9 @@ int main(void) {
 	while (1)
 	{
 		lcdFillRGB(0,200,0);
+		LPC_GPIO2->DATA |= (1<<5);
+		delay_ms(100);
+		LPC_GPIO2->DATA &= ~(1<<5);
 		delay_ms(100);
 
 	}
