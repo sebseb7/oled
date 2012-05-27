@@ -3,6 +3,9 @@
 
 #include "main.h"
 
+#define LED_WIDTH 128
+#define LED_HEIGHT 128
+
 #define I6800
 #define C262K
 

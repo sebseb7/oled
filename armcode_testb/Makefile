@@ -23,7 +23,7 @@ OBJECTS= $(SRC:.c=.o) $(ASRC:.s=.o)
 HEADERS=$(wildcard core/*.h drivers/*.h libs/*.h lpc_drivers/*.h usb/*.h *.h) 
 
 #  Compiler Options
-GCFLAGS = -std=gnu99 -Wall -fno-common -mcpu=cortex-m3 -mthumb -O$(OPTIMIZATION) $(DEBUG) -Ilpc_drivers -Iusb -I. -Idrivers -Icore -Ilibs 
+GCFLAGS = -DARM_MATH_CM3=1 -std=gnu99 -Wall -fno-common -mcpu=cortex-m3 -mthumb -O$(OPTIMIZATION) $(DEBUG) -Ilpc_drivers -Iusb -I. -Idrivers -Icore -Ilibs 
 # -ffunction-sections -fdata-sections -fmessage-length=0   -fno-builtin
 GCFLAGS += -D__RAM_MODE__=0  -D__BUILD_WITH_EXAMPLE__ 
 LDFLAGS = -mcpu=cortex-m3 -mthumb -O$(OPTIMIZATION) -nostartfiles -T$(LSCRIPT)  
@@ -47,7 +47,7 @@ firmware.bin: $(PROJECT).elf Makefile
 	$(OBJCOPY) -R .stack -O binary $(PROJECT).elf firmware.bin
 	tools/lpcrc/lpcrc firmware.bin
 $(PROJECT).elf: $(OBJECTS) Makefile
-	$(GCC) $(LDFLAGS) $(OBJECTS)  -o $(PROJECT).elf
+	$(GCC) $(LDFLAGS) $(OBJECTS) -o $(PROJECT).elf
 
 stats: $(PROJECT).elf Makefile
 	$(SIZE) $(PROJECT).elf

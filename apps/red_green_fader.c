@@ -28,11 +28,14 @@ static uint8_t tick(void) {
 }
 
 
+static uint8_t key(uint8_t key) {
+
+}
 
 static void init(void) ATTRIBUTES
 void init(void) {
 	
-	registerAnimation(tick, 10, 450);
+	registerAnimation(tick, key,10, 450);
 }
 
 

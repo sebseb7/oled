@@ -37,10 +37,21 @@ uint16_t sini(uint16_t x)
 #endif
 
 }
-
-static double pythagoras( double side1, double side2 )
+static unsigned isqrt(unsigned val)
 {
-	return sqrt(pow( side1, 2 ) + pow( side2, 2 ));
+	unsigned temp, g = 0, b = 0x8000, bshft = 15;
+	do {
+		if (val >= (temp = (((g << 1) + b)<<bshft--))) {
+			g += b;
+			val -= temp;
+		}
+	} while (b >>= 1);
+	return g;
+}
+
+static unsigned int pythagoras( unsigned int side1, unsigned int side2 )
+{
+	return isqrt(side1*side1 + side2*side2);
 }
 
 
@@ -51,10 +62,10 @@ static uint8_t tick(void) {
 	uint8_t x, y;
 
 	uint16_t sin1 = sini(a);
-	double x0 = (double)sini(a*4)/256-64;
-	double y0 = (double)sini((a*4)+0x1000)/256-64;
-	double x1 = (double)sini(a*5)/128-128;
-	double y1 = (double)sini((a*5)+0x1000)/128-128;
+	unsigned x0 = sini(a*4)/256-64;
+	unsigned y0 = sini((a*4)+0x1000)/256-64;
+	unsigned x1 = sini(a*5)/128-128;
+	unsigned y1 = sini((a*5)+0x1000)/128-128;
 		
 	for(y = 0; y < LED_HEIGHT; y++) 
 	{
@@ -64,8 +75,8 @@ static uint8_t tick(void) {
 		for(x = 0; x < LED_WIDTH; x++) 
 		{
 			
-			double dist = pythagoras(x0-x,y0-y);
-			double dist2 = pythagoras(y1-x,x1-y);
+			unsigned int dist = pythagoras(x0-x,y0-y);
+			unsigned int dist2 = pythagoras(y1-x,x1-y);
 
 
 			uint16_t h = sini(sin1+x*20)+ y_part + sini(dist*500) + sini(dist2*300);
