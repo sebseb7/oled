@@ -12,7 +12,7 @@ endif
 
 LSCRIPT=core/lpc1343.ld
 
-OPTIMIZATION = 2
+OPTIMIZATION = s
 DEBUG = -g
 
 #########################################################################
@@ -20,12 +20,13 @@ DEBUG = -g
 SRC=$(wildcard core/*.c *.c drivers/*.c libs/*.c lpc_drivers/*.c usb/*.c) 
 ASRC=$(wildcard core/*.s)
 OBJECTS= $(SRC:.c=.o) $(ASRC:.s=.o)
+LSTFILES=$(SRC:.c=.lst) 
 HEADERS=$(wildcard core/*.h drivers/*.h libs/*.h lpc_drivers/*.h usb/*.h *.h) 
 
 #  Compiler Options
 GCFLAGS = -DARM_MATH_CM3=1 -std=gnu99 -Wall -fno-common -mcpu=cortex-m3 -mthumb -O$(OPTIMIZATION) $(DEBUG) -Ilpc_drivers -Iusb -I. -Idrivers -Icore -Ilibs 
 # -ffunction-sections -fdata-sections -fmessage-length=0   -fno-builtin
-GCFLAGS += -D__RAM_MODE__=0  -D__BUILD_WITH_EXAMPLE__ 
+GCFLAGS += -D__RAM_MODE__=0  -D__BUILD_WITH_EXAMPLE__ -Wa,-adhlns=$(<:.c=.lst) 
 LDFLAGS = -mcpu=cortex-m3 -mthumb -O$(OPTIMIZATION) -nostartfiles -T$(LSCRIPT)  
 ASFLAGS = -mcpu=cortex-m3 --defsym RAM_MODE=0
 
@@ -54,6 +55,7 @@ stats: $(PROJECT).elf Makefile
 
 clean:
 	$(REMOVE) $(OBJECTS)
+	$(REMOVE) $(LSTFILES)
 	$(REMOVE) firmware.bin
 	$(REMOVE) $(PROJECT).elf
 	make -C tools/lpcrc clean

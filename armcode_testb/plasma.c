@@ -49,6 +49,8 @@ static uint8_t sini(uint16_t x)
 static uint16_t nr, ng, nb;
 
 static uint16_t h;
+static uint16_t h1;
+static uint16_t h2;
 static uint16_t s=255;
 
 static prog_uint16_t table[] = { 0,1,2,2,3,4,5,5,6,7,8,9,9,10,11,12,13,13,14,15,16,17,17,18,19,20,21,21,22,23,24,25,25,26,27,28,28,29,30,31,32,32,33,34,35,36,36,37,38,39,40,40,41,42,43,44,44,45,46,47,48,48,49,50,51,51,52,53,54,55,55,56,57,58,59,59,60,61,62,63,63,64,65,66,67,67,68,69,70,70,71,72,73,74,74,75,76,77,78,78,79,80,81,82,82,83,84,85,86,86,87,88,89,89,90,91,92,93,93,94,95,96,97,97,98,99,100,101,101,102,103,104,104,105,106,107,108,108,109,110,111,112,112,113,114,115,116,116,117,118,119,119,120,121,122,123,123,124,125,126,127,127,128,129,130,131,131,132,133,134,134,135,136,137,138,138,139,140,141,142,142,143,144,145,146,146,147,148,149,150,150,151,152,153,153,154,155,156,157,157,158,159,160,161,161,162,163,164,165,165,166,167,168,168,169,170,171,172,172,173,174,175,176,176,177,178,179,180,180,181,182,183,183,184,185,186,187,187,188,189,190,191,191,192,193,194,195,195,196,197,198,199,199,200,201,202,202,203,204,205,206,206,207,208,209,210,210,211,212,213,214,214,215,216,217,218,218,219,220,
@@ -110,34 +112,42 @@ static void hsv_to_rgb(void)
 
 uint8_t tick(void) {
 	static uint16_t a = 0;
+	static uint8_t zap = 0;
 
 	uint8_t x, y;
 
 	uint8_t sin1 = sini(a+512);
 	uint8_t sin2 = sini(a*2);
-	uint16_t sin3 = sini(a*3)<<9;
+	uint16_t sin3 = sini(a*3)<<10;
 	
 	
 	ssd1351SetCursor(0, 0);
 	SET_DC; 
+	CLR_D7;
+	CLR_D6;
+
+	
 
 	for(y = 0; y < LED_HEIGHT; y++) 
 	{
-		uint16_t y_part = h = 32*sini(sin2+y*10)  + sin3;
+		uint16_t y_part = 32*sini(sin2+y*10)  + sin3;
 
 		for(x = 0; x < LED_WIDTH; x++) 
 		{
-			h = 32*sini(sin1+x*16)+ y_part;
+			h = 32*sini(sin1+x*(10+(sini(a*8)>>4)))+ y_part;
+			h1 = 32*sini(sin1+x*20)+ y_part;
+			h2 = 32*sini(sin1+x*10)+ y_part;
 			//hsv_to_rgb();
 			//setLedXY(x, y, nr>>2,ng>>2,nb>>2);
 			//
 			//
-			uint8_t r = sini(h>>4);
-			uint8_t g = sini((h>>4)+350);
-			uint8_t b = sini((h>>4)+700);
+			uint8_t r = sini((h>>4)+sini(a)*3);
+			uint8_t g = sini((h1>>4)+sini(a*2));
+			uint8_t b = sini((h2>>4)+sini(a*3)*2);
+
 //			setLedXY(x, y, r,g,b);
 #ifdef C262K
-			ssd1351SendByte( (r>>2), 0 );
+	//		ssd1351SendByte( (r>>2), 0 );
 
 /*	CLR_D7;
 
@@ -147,9 +157,34 @@ uint8_t tick(void) {
 	LPC_GPIO2->MASKED_ACCESS[(1<<3)]=r>>1;
 	CLR_E;
 */
+	SET_E;
+	LPC_GPIO0->MASKED_ACCESS[((1<<6)|(1<<7))]=r<<6;
+	LPC_GPIO1->MASKED_ACCESS[((1<<3)|(1<<4)|(1<<5))]=r>>2;
+	LPC_GPIO2->MASKED_ACCESS[(1<<3)]=r>>1;
 
-			ssd1351SendByte( (g>>2), 0 );
-			ssd1351SendByte( (b>>2), 0 );
+  __ASM volatile ("nop");
+	CLR_E;
+  __ASM volatile ("nop");
+	SET_E;
+	LPC_GPIO0->MASKED_ACCESS[((1<<6)|(1<<7))]=g<<6;
+	LPC_GPIO1->MASKED_ACCESS[((1<<3)|(1<<4)|(1<<5))]=g>>2;
+	LPC_GPIO2->MASKED_ACCESS[(1<<3)]=g>>1;
+
+  __ASM volatile ("nop");
+	CLR_E;
+  __ASM volatile ("nop");
+	SET_E;
+	LPC_GPIO0->MASKED_ACCESS[((1<<6)|(1<<7))]=b<<6;
+	LPC_GPIO1->MASKED_ACCESS[((1<<3)|(1<<4)|(1<<5))]=b>>2;
+	LPC_GPIO2->MASKED_ACCESS[(1<<3)]=b>>1;
+
+  __ASM volatile ("nop");
+	CLR_E;
+  __ASM volatile ("nop");
+
+		//	ssd1351SendByte( (g>>2), 0 );
+			
+		//	ssd1351SendByte( (b>>2), 0 );
 
 #endif
 #ifndef C262K
@@ -164,6 +199,7 @@ uint8_t tick(void) {
 		}
 	}
 	a++;
+	zap++;
 	if(a==1024)
 	{
 		a=0;

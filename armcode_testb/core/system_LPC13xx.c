@@ -152,8 +152,8 @@
 // ******** Code Red *********
 // * Changed USBCLK_SETUP to 0
 // ***************************
-#define USBCLK_SETUP          0
-#define USBPLL_SETUP          0
+#define USBCLK_SETUP          1
+#define USBPLL_SETUP          1
 #define USBPLLCLKSEL_Val      0x00000001
 #define USBPLLCTRL_Val        0x00000003 // M :4; P :2
 #define SYSAHBCLKDIV_Val      0x00000001

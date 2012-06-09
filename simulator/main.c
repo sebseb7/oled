@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
         tio.c_cc[VMIN]=1;
         tio.c_cc[VTIME]=5;
  
-        tty_fd=open("/dev/cu.usbmodem621", O_RDWR | O_NONBLOCK);      
+        tty_fd=open("/dev/cu.usbmodem471", O_RDWR | O_NONBLOCK);      
         cfsetospeed(&tio,B115200);            // 115200 baud
         cfsetispeed(&tio,B115200);            // 115200 baud
 #if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
@@ -154,6 +154,24 @@ int main(int argc, char *argv[]) {
 						case SDLK_4:
 							key_fp(4);
 							break;
+						case SDLK_5:
+							key_fp(5);
+							break;
+						case SDLK_6:
+							key_fp(6);
+							break;
+						case SDLK_7:
+							key_fp(7);
+							break;
+						case SDLK_8:
+							key_fp(8);
+							break;
+						case SDLK_9:
+							key_fp(9);
+							break;
+						case SDLK_0:
+							key_fp(0);
+							break;
 							
 						default: break;
 					}
@@ -193,7 +211,9 @@ int main(int argc, char *argv[]) {
 //						r=18;
 //						g=32;
 //						b=18;
-						r += 17;
+
+
+/*						r += 17;
 						g += 31;
 						b += 17;
 						
@@ -209,7 +229,7 @@ int main(int argc, char *argv[]) {
 						{
 							b=245;
 						}
-					
+*/					
 					
 						printf("%x %x %x\n",1|((r>>2)<<2),2|((g>>2)<<2),3|((b>>2)<<2));
 					

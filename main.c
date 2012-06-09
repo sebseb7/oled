@@ -84,7 +84,7 @@ int main(void)
 			if(stage == 3)
 			{
 				b = data;
-				lcdFillRGB2(r,g,b);
+				lcdFillRGBd(r,g,b);
 			}
 
 			if(stage < 10)
