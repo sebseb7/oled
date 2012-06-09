@@ -7,8 +7,7 @@
 #define LED_HEIGHT	128
 
 // multiple of 15
-#define ZOOM 2
-
+#define ZOOM 5
 
 #define SIMULATOR
 
