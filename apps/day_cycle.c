@@ -51,6 +51,13 @@ uint8_t phase[3][HOURS*SEGMENTS_PER_HOUR]={
 	
 };
 
+uint8_t offset[3][HOURS*SEGMENTS_PER_HOUR]={
+	{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},//red
+	{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},//green
+	{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0} //blue
+
+	
+};
 
 
 
@@ -59,10 +66,18 @@ uint8_t hour = 0;
 
 uint8_t interva12 = 1;
 
-
-int8_t rd=0;
-int8_t gd=0;
-int8_t bd=0;
+static void print_offsets()
+{
+	for(uint8_t c = 0 ; c < 3 ; c++)
+	{
+		for(uint8_t i = 0 ; i < HOURS+SEGMENTS_PER_HOUR;i++)
+		{
+			printf("%i, ",offset[c][i]);
+		}
+		printf("\n");
+	}
+	printf("\n");
+}
 
 static uint8_t key(uint8_t key) {
 
@@ -109,31 +124,39 @@ static uint8_t key(uint8_t key) {
 		}
 	
 	}
+	
+	uint8_t index = hour*SEGMENTS_PER_HOUR;
+	if(minute >= (60/SEGMENTS_PER_HOUR))
+	{
+			index++;
+	}
+	
+	
 	if(key == 5)
 	{
-		rd++;
+		offset[0][index]++;
 	}
 	if(key == 6)
 	{
-		rd--;
+		offset[0][index]--;
 	}
 	if(key == 7)
 	{
-		gd++;
+		offset[1][index]++;
 	}
 	if(key == 8)
 	{
-		gd--;
+		offset[1][index]--;
 	}
 	if(key == 9)
 	{
-		bd++;
+		offset[2][index]++;
 	}
 	if(key == 0)
 	{
-		bd--;
+		offset[2][index]--;
 	}
-
+	print_offsets();
 }
 
 
@@ -166,15 +189,19 @@ static uint8_t tick(void) {
 
 	
 
-	uint8_t r = rd+(phase[0][index]*((60/SEGMENTS_PER_HOUR)-index2)/(60.0/SEGMENTS_PER_HOUR))+(phase[0][next_index]*(index2)/(60.0/SEGMENTS_PER_HOUR));
-	uint8_t g = gd+(phase[1][index]*((60/SEGMENTS_PER_HOUR)-index2)/(60.0/SEGMENTS_PER_HOUR))+(phase[1][next_index]*(index2)/(60.0/SEGMENTS_PER_HOUR));
-	uint8_t b = bd+(phase[2][index]*((60/SEGMENTS_PER_HOUR)-index2)/(60.0/SEGMENTS_PER_HOUR))+(phase[2][next_index]*(index2)/(60.0/SEGMENTS_PER_HOUR));
+	uint8_t r = (phase[0][index]*((60/SEGMENTS_PER_HOUR)-index2)/(60.0/SEGMENTS_PER_HOUR))+(phase[0][next_index]*(index2)/(60.0/SEGMENTS_PER_HOUR));
+	uint8_t g = (phase[1][index]*((60/SEGMENTS_PER_HOUR)-index2)/(60.0/SEGMENTS_PER_HOUR))+(phase[1][next_index]*(index2)/(60.0/SEGMENTS_PER_HOUR));
+	uint8_t b = (phase[2][index]*((60/SEGMENTS_PER_HOUR)-index2)/(60.0/SEGMENTS_PER_HOUR))+(phase[2][next_index]*(index2)/(60.0/SEGMENTS_PER_HOUR));
+	
+	r += (offset[0][index]*((60/SEGMENTS_PER_HOUR)-index2)/(60.0/SEGMENTS_PER_HOUR))+(offset[0][next_index]*(index2)/(60.0/SEGMENTS_PER_HOUR));
+	g += (offset[1][index]*((60/SEGMENTS_PER_HOUR)-index2)/(60.0/SEGMENTS_PER_HOUR))+(offset[1][next_index]*(index2)/(60.0/SEGMENTS_PER_HOUR));
+	b += (offset[2][index]*((60/SEGMENTS_PER_HOUR)-index2)/(60.0/SEGMENTS_PER_HOUR))+(offset[2][next_index]*(index2)/(60.0/SEGMENTS_PER_HOUR));
 
 	
 	draw_filledCircle(64,64,70,0,0,0);
 	draw_filledCircle(64,64,62,r,g,b);
 
-	printf("hour=%i min=%i r=%03i g=%03i b=%03i\n",hour,minute,r,g,b);
+	//printf("hour=%i min=%i r=%03i g=%03i b=%03i\n",hour,minute,r,g,b);
 
 	draw_number(20,30,r,3,'0',255,255,255);
 	draw_number(50,30,g,3,'0',255,255,255);
