@@ -19,10 +19,12 @@ static uint8_t tick(void) {
 	return 0;
 }
 
+static uint8_t key(uint8_t key) {};
+
 static void init(void) ATTRIBUTES
 void init(void) {
 	
-	registerAnimation(tick, 1, 450);
+	registerAnimation(tick, key,1, 450);
 }
 
 uint16_t randr(uint16_t start,uint16_t end)

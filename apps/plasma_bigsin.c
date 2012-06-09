@@ -69,10 +69,11 @@ static uint8_t tick(void) {
 
 
 			uint16_t h = sini(sin1+x*20)+ y_part + sini(dist*500) + sini(dist2*300);
+			uint16_t h2 = sini(sin1+x*30)+ y_part + sini(dist*200) + sini(dist2*350);
 			setLedXY(
 				x,y,
 				sini((h>>2)+a*500)>>8,
-				sini((h>>2)+a*320+0x1555)>>8,
+				sini((h2>>2)+a*320+0x1555)>>8,
 				sini((h>>2)+a*630+0x2aaa)>>8
 			);
 		}
@@ -85,10 +86,13 @@ static uint8_t tick(void) {
 	return 0;
 }
 
+static uint8_t key(uint8_t key) {
+};
+
 static void init(void) ATTRIBUTES
 
 void init(void) {
-	registerAnimation(tick, 4, 450);
+	registerAnimation(tick, key , 4, 450);
 }
 
 
