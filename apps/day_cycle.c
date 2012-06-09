@@ -70,6 +70,24 @@ static void print_offsets()
 {
 	for(uint8_t c = 0 ; c < 3 ; c++)
 	{
+		printf("{");
+		for(uint8_t i = 0 ; i < HOURS+SEGMENTS_PER_HOUR;i++)
+		{
+			printf("%003i, ",offset[c][i]+phase[c][i]);
+		}
+		if(c ==2)
+		{
+			printf("}\n");
+		}else
+		{
+			printf("},\n");
+		}
+
+		
+	}
+	printf("\n");
+	for(uint8_t c = 0 ; c < 3 ; c++)
+	{
 		for(uint8_t i = 0 ; i < HOURS+SEGMENTS_PER_HOUR;i++)
 		{
 			printf("%i, ",offset[c][i]);
