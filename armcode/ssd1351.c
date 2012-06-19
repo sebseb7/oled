@@ -98,7 +98,75 @@ void ssd1351SendByte(uint8_t byte, uint8_t command)
 
 	SET_E;
 
-	LPC_GPIO2->DATA = port2_table[byte];
+//	LPC_GPIO2->DATA = port2_table[byte];
+
+	if((byte & 1) == 1)
+	{
+		SET_D0;
+	}
+	else
+	{
+		CLR_D0;
+	}
+	if((byte & 2) == 2)
+	{
+		SET_D1;
+	}
+	else
+	{
+		CLR_D1;
+	}
+	if((byte & 4) == 4)
+	{
+		SET_D2;
+	}
+	else
+	{
+		CLR_D2;
+	}
+	if((byte & 8) == 8)
+	{
+		SET_D3;
+	}
+	else
+	{
+		CLR_D3;
+	}
+	if((byte & 16) == 16)
+	{
+		SET_D4;
+	}
+	else
+	{
+		CLR_D4;
+	}
+	if((byte & 32) == 32)
+	{
+		SET_D5;
+	}
+	else
+	{
+		CLR_D5;
+	}
+	if((byte & 64) == 64)
+	{
+		SET_D6;
+	}
+	else
+	{
+		CLR_D6;
+	}
+	if((byte & 128) == 128)
+	{
+		SET_D7;
+	}
+	else
+	{
+		CLR_D7;
+	}
+
+
+	__ASM volatile ("nop");
 
 	CLR_E;
 

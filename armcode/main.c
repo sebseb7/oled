@@ -24,8 +24,6 @@ int main(void) {
 	
 	SystemCoreClockUpdate();
 	SysTick_Config(SystemCoreClock/1000);
-  
-  	//LPC_SYSCON->SYSAHBCLKCTRL |= (1<<6);
 
 
 	//configure all connections to the oled as output
@@ -39,8 +37,6 @@ int main(void) {
 
 	//set REG_EN to VCC
 	LPC_GPIO1->DATA |= (1<<7);
-	
-// 0 i i i 1 i i i i n 0 1 1 0 i 1 0
 
 	//set D8 to GND
 	LPC_GPIO2->DATA &= ~(1<<6);
@@ -49,25 +45,22 @@ int main(void) {
 	//set R/W to GND
 	LPC_GPIO1->DATA &= ~(1<<10);
 
-		delay_ms(50);
-		lcdInit();
-		delay_ms(50);
+	delay_ms(50);
+	lcdInit();
+	delay_ms(50);
+	
 	while (1)
 	{
 		
-//		lcdFillRGB(0,255,0);
-//		delay_ms(100);
-	//	LPC_GPIO2->DATA |= (1<<5);
-	//	LPC_GPIO1->DATA |= (1<<7);
-	//	delay_ms(50);
-//		lcdFillRGB(0,0,255);
-//		delay_ms(100);
-//		lcdFillRGB(255,0,0);
-//		delay_ms(100);
-	//	LPC_GPIO2->DATA &= ~(1<<5);
-	//	LPC_GPIO1->DATA &= ~(1<<7);
-	//	delay_ms(50);
-		tick();
-	}
+		lcdFillRGB(0,255,0);
+		delay_ms(400);
+		lcdFillRGB(0,0,255);
+		delay_ms(400);
+		lcdFillRGB(255,0,0);
+		delay_ms(400);
+
+//		tick();
+
+}
 }
 

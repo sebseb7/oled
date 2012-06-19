@@ -123,8 +123,6 @@ uint8_t tick(void) {
 	
 	ssd1351SetCursor(0, 0);
 	SET_DC; 
-	CLR_D7;
-	CLR_D6;
 
 	
 
