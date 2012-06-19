@@ -3,6 +3,13 @@
 
 #include "main.h"
 
+#define LED_WIDTH 128
+#define LED_HEIGHT 128
+
+#define I6800
+#define C262K
+
+
 typedef struct
 {
   uint16_t width;         // LCD width in pixels (default orientation)
@@ -33,7 +40,7 @@ typedef struct
 
 // Macros for control line state
 
-
+/*
 #define SET_SCK	(LPC_GPIO0->DATA |= (1<<10))	
 #define CLR_SCK	(LPC_GPIO0->DATA &= ~(1<<10))
 #define SET_SID	(LPC_GPIO0->DATA |= (1<<9))	
@@ -44,6 +51,43 @@ typedef struct
 #define CLR_DC	(LPC_GPIO1->DATA &= ~(1<<0))
 #define SET_RST	(LPC_GPIO1->DATA |= (1<<1))	
 #define CLR_RST	(LPC_GPIO1->DATA &= ~(1<<1))
+*/
+
+/*#define SET_SCK	(LPC_GPIO2->MASKED_ACCESS[(1<<6)] = (1<<6))	
+#define CLR_SCK	(LPC_GPIO2->MASKED_ACCESS[(1<<6)] = 0)
+#define SET_SID	(LPC_GPIO2->MASKED_ACCESS[(1<<7)] = (1<<7))	
+#define CLR_SID	(LPC_GPIO2->MASKED_ACCESS[(1<<7)] = 0)
+*/
+/*
+#define SET_CS	(LPC_GPIO0->MASKED_ACCESS[(1<<8)] = (1<<8))	
+#define CLR_CS	(LPC_GPIO0->MASKED_ACCESS[(1<<8)] = 0)
+*/
+#define SET_DC	(LPC_GPIO3->MASKED_ACCESS[(1<<0)] = (1<<0))	
+#define CLR_DC	(LPC_GPIO3->MASKED_ACCESS[(1<<0)] = 0)
+#define SET_RST	(LPC_GPIO0->MASKED_ACCESS[(1<<7)] = (1<<7))	
+#define CLR_RST	(LPC_GPIO0->MASKED_ACCESS[(1<<7)] = 0)
+
+
+#ifdef I6800
+#define SET_E (LPC_GPIO0->MASKED_ACCESS[(1<<11)] = (1<<11))
+#define CLR_E (LPC_GPIO0->MASKED_ACCESS[(1<<11)] = 0)
+#define SET_D0 (LPC_GPIO2->MASKED_ACCESS[(1<<5)] = (1<<5))
+#define CLR_D0 (LPC_GPIO2->MASKED_ACCESS[(1<<5)] = 0)
+#define SET_D1 (LPC_GPIO2->MASKED_ACCESS[(1<<11)] = (1<<11))
+#define CLR_D1 (LPC_GPIO2->MASKED_ACCESS[(1<<11)] = 0)
+#define SET_D2 (LPC_GPIO2->MASKED_ACCESS[(1<<2)] = (1<<2))
+#define CLR_D2 (LPC_GPIO2->MASKED_ACCESS[(1<<2)] = 0)
+#define SET_D3 (LPC_GPIO2->MASKED_ACCESS[(1<<10)] = (1<<10))
+#define CLR_D3 (LPC_GPIO2->MASKED_ACCESS[(1<<10)] = 0)
+#define SET_D4 (LPC_GPIO2->MASKED_ACCESS[(1<<9)] = (1<<9))
+#define CLR_D4 (LPC_GPIO2->MASKED_ACCESS[(1<<9)] = 0)
+#define SET_D5 (LPC_GPIO2->MASKED_ACCESS[(1<<4)] = (1<<4))
+#define CLR_D5 (LPC_GPIO2->MASKED_ACCESS[(1<<4)] = 0)
+#define SET_D6 (LPC_GPIO2->MASKED_ACCESS[(1<<3)] = (1<<3))
+#define CLR_D6 (LPC_GPIO2->MASKED_ACCESS[(1<<3)] = 0)
+#define SET_D7 (LPC_GPIO2->MASKED_ACCESS[(1<<8)] = (1<<8))
+#define CLR_D7 (LPC_GPIO2->MASKED_ACCESS[(1<<8)] = 0)
+#endif
 
 
 /* clock 06
@@ -99,7 +143,10 @@ enum
 void lcdFillRGB(uint8_t r,uint8_t g,uint8_t b);
 void lcdFillRGB2(uint8_t r,uint8_t g,uint8_t b);
 void lcdFillRGBdither(uint8_t r,uint8_t g,uint8_t b,uint8_t r2,uint8_t g2, uint8_t b2,uint8_t val);
+void lcdFillRGBd(uint8_t r,uint8_t g,uint8_t b);
 void lcdInit(void);
 void setLedXY(uint8_t x, uint8_t y, uint8_t r,uint8_t g, uint8_t b);
+void ssd1351SetCursor(uint8_t x, uint8_t y);
+void ssd1351SendByte(uint8_t byte, uint8_t command);
 
 #endif
