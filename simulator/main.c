@@ -154,6 +154,24 @@ int main(int argc, char *argv[]) {
 						case SDLK_4:
 							key_fp(4);
 							break;
+						case SDLK_5:
+							key_fp(5);
+							break;
+						case SDLK_6:
+							key_fp(6);
+							break;
+						case SDLK_7:
+							key_fp(7);
+							break;
+						case SDLK_8:
+							key_fp(8);
+							break;
+						case SDLK_9:
+							key_fp(9);
+							break;
+						case SDLK_0:
+							key_fp(0);
+							break;
 							
 						default: break;
 					}
@@ -190,7 +208,6 @@ int main(int argc, char *argv[]) {
 						int g = leds[y][x][1];
 						int b = leds[y][x][2];
 				
-						printf("%x %x %x\n",1|((r>>2)<<2),2|((g>>2)<<2),3|((b>>2)<<2));
 					
 //						char cmd1[] = {1|((r>>2)<<2),2|((g>>2)<<2),3|((b>>2)<<2)}; 
 						if((last_r != r)||(last_g != g)||(last_b != b))
