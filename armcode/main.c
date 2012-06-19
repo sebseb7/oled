@@ -55,15 +55,19 @@ int main(void) {
 	while (1)
 	{
 		
-		lcdFillRGB(0,255,0);
+//		lcdFillRGB(0,255,0);
+//		delay_ms(100);
 	//	LPC_GPIO2->DATA |= (1<<5);
 	//	LPC_GPIO1->DATA |= (1<<7);
-		delay_ms(50);
-		lcdFillRGB(255,0,0);
+	//	delay_ms(50);
+//		lcdFillRGB(0,0,255);
+//		delay_ms(100);
+//		lcdFillRGB(255,0,0);
+//		delay_ms(100);
 	//	LPC_GPIO2->DATA &= ~(1<<5);
 	//	LPC_GPIO1->DATA &= ~(1<<7);
-		delay_ms(50);
-	//	tick();
+	//	delay_ms(50);
+		tick();
 	}
 }
 

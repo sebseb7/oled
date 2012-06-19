@@ -13,6 +13,15 @@ static lcdProperties_t ssd1351Properties = { 128, 128 };
 #define DATA(c)       do {  SET_DC; ssd1351SendByte( c, 0 );  } while (0);
 #define DELAY(mS)     do { delay_ms(mS); } while(0);
 
+
+uint16_t port2_table[64] = 
+{
+	0,32,2048,2080,4,36,2052,2084,1024,1056,3072,3104,1028,1060,3076,3108,512,544,
+	2560,2592,516,548,2564,2596,1536,1568,3584,3616,1540,1572,3588,3620,16,48,2064,
+	2096,20,52,2068,2100,1040,1072,3088,3120,1044,1076,3092,3124,528,560,2576,2608,
+	532,564,2580,2612,1552,1584,3600,3632,1556,1588,3604,3636
+};
+
 void setByte(uint8_t byte)
 {
 	if((byte & 1) == 1)
@@ -142,38 +151,11 @@ void ssd1351SendByte(uint8_t byte, uint8_t command)
 
 #ifdef I6800
 
-
-  __ASM volatile ("nop");
-  __ASM volatile ("nop");
-  __ASM volatile ("nop");
-  __ASM volatile ("nop");
-  __ASM volatile ("nop");
-  __ASM volatile ("nop");
-  __ASM volatile ("nop");
-  __ASM volatile ("nop");
-
 	SET_E;
-  __ASM volatile ("nop");
-  __ASM volatile ("nop");
-  __ASM volatile ("nop");
 
 	setByte(byte);
-//	LPC_GPIO0->MASKED_ACCESS[((1<<6)|(1<<7))]=byte<<6;
-//	LPC_GPIO1->MASKED_ACCESS[((1<<3)|(1<<4)|(1<<5))]=byte;
-//	LPC_GPIO2->MASKED_ACCESS[(1<<3)]=byte<<1;
-//	LPC_GPIO3->MASKED_ACCESS[(1<<3)]=byte>>3;
-//	LPC_GPIO2->MASKED_ACCESS[(1<<6)]=byte>>1;
-
-  __ASM volatile ("nop");
 
 	CLR_E;
-  __ASM volatile ("nop");
-  __ASM volatile ("nop");
-  __ASM volatile ("nop");
-
-
-
-
 
 #endif
 
@@ -704,33 +686,30 @@ void lcdFillRGB(uint8_t r,uint8_t g,uint8_t b)
 	ssd1351SetCursor(0, 0);
 
 #ifdef C262K
+
+	
+
+	uint16_t port_r = port2_table[r>>2];
+	uint16_t port_g = port2_table[g>>2];
+	uint16_t port_b = port2_table[b>>2];
+
+
 	SET_DC;	
 	for (x=1; x<=ssd1351Properties.width ;x++)
 	{
 		for (y=1; y<= ssd1351Properties.height;y++)
 		{
 			SET_E;
-			setByte(r>>2);
-//			LPC_GPIO0->MASKED_ACCESS[((1<<6)|(1<<7))]=r<<4;
-//			LPC_GPIO1->MASKED_ACCESS[((1<<3)|(1<<4)|(1<<5))]=r>>2;
-//			LPC_GPIO2->MASKED_ACCESS[(1<<3)]=r>>1;
-  __ASM volatile ("nop");
-			CLR_E;
-	//		ssd1351SendByte( g>>2, 0 );
-	//		ssd1351SendByte( b>>2, 0 );
-			SET_E;
-			setByte(g>>2);
-//			LPC_GPIO0->MASKED_ACCESS[((1<<6)|(1<<7))]=g<<4;
-//			LPC_GPIO1->MASKED_ACCESS[((1<<3)|(1<<4)|(1<<5))]=g>>2;
-//			LPC_GPIO2->MASKED_ACCESS[(1<<3)]=g>>1;
-  __ASM volatile ("nop");
+			LPC_GPIO2->DATA = port_r;
+			__ASM volatile ("nop");
 			CLR_E;
 			SET_E;
-			setByte(b>>2);
-//			LPC_GPIO0->MASKED_ACCESS[((1<<6)|(1<<7))]=b<<4;
-//			LPC_GPIO1->MASKED_ACCESS[((1<<3)|(1<<4)|(1<<5))]=b>>2;
-//			LPC_GPIO2->MASKED_ACCESS[(1<<3)]=b>>1;
-  __ASM volatile ("nop");
+			LPC_GPIO2->DATA = port_g;
+			__ASM volatile ("nop");
+			CLR_E;
+			SET_E;
+			LPC_GPIO2->DATA = port_b;
+			__ASM volatile ("nop");
 			CLR_E;
 		}
 	}

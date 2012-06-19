@@ -148,5 +148,6 @@ void lcdInit(void);
 void setLedXY(uint8_t x, uint8_t y, uint8_t r,uint8_t g, uint8_t b);
 void ssd1351SetCursor(uint8_t x, uint8_t y);
 void ssd1351SendByte(uint8_t byte, uint8_t command);
+extern uint16_t port2_table[64];
 
 #endif
