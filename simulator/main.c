@@ -80,11 +80,11 @@ int main(int argc, char *argv[]) {
         tio.c_cc[VMIN]=1;
         tio.c_cc[VTIME]=5;
  
-        tty_fd=open("/dev/cu.usbserial-A6008jMH", O_RDWR | O_NONBLOCK);      
-        cfsetospeed(&tio,B38400);            // 115200 baud
-        cfsetispeed(&tio,B38400);            // 115200 baud
+        tty_fd=open("/dev/cu.usbmodemfa131", O_RDWR | O_NONBLOCK);      
+        cfsetospeed(&tio,B115200);            // 115200 baud
+        cfsetispeed(&tio,B115200);            // 115200 baud
 #if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
-		speed_t speed = 38400;
+		speed_t speed = 115200;
 		if ( ioctl( tty_fd,	 IOSSIOSPEED, &speed ) == -1 )
 		{
 			printf( "Error %d calling ioctl( ..., IOSSIOSPEED, ... )\n", errno );
@@ -190,27 +190,6 @@ int main(int argc, char *argv[]) {
 						int g = leds[y][x][1];
 						int b = leds[y][x][2];
 				
-//						r=18;
-//						g=32;
-//						b=18;
-						r += 17;
-						g += 31;
-						b += 17;
-						
-						if(r>245)
-						{
-							r=245;
-						}
-						if(g>245)
-						{
-							g=245;
-						}
-						if(b>245)
-						{
-							b=245;
-						}
-					
-					
 						printf("%x %x %x\n",1|((r>>2)<<2),2|((g>>2)<<2),3|((b>>2)<<2));
 					
 //						char cmd1[] = {1|((r>>2)<<2),2|((g>>2)<<2),3|((b>>2)<<2)}; 
