@@ -8,8 +8,6 @@ static lcdProperties_t ssd1351Properties = { 128, 128 };
 /*************************************************/
 
 #define CMD(c)        do {  CLR_DC; ssd1351SendByte( c, 1 );  } while (0)
-//#define CMD(c)        do {  CLR_DC; ssd1351SendByte( c, 1 );  } while (0)
-//#define DATA(c)       do { SET_CS; CLR_CS; SET_DC; ssd1351SendByte( c, 0 ); SET_CS; } while (0);
 #define DATA(c)       do {  SET_DC; ssd1351SendByte( c, 0 );  } while (0);
 #define DELAY(mS)     do { delay_ms(mS); } while(0);
 
@@ -22,73 +20,6 @@ uint16_t port2_table[64] =
 	532,564,2580,2612,1552,1584,3600,3632,1556,1588,3604,3636
 };
 
-void setByte(uint8_t byte)
-{
-	if((byte & 1) == 1)
-	{
-		SET_D0;
-	}
-	else
-	{
-		CLR_D0;
-	}
-	if((byte & 2) == 2)
-	{
-		SET_D1;
-	}
-	else
-	{
-		CLR_D1;
-	}
-	if((byte & 4) == 4)
-	{
-		SET_D2;
-	}
-	else
-	{
-		CLR_D2;
-	}
-	if((byte & 8) == 8)
-	{
-		SET_D3;
-	}
-	else
-	{
-		CLR_D3;
-	}
-	if((byte & 16) == 16)
-	{
-		SET_D4;
-	}
-	else
-	{
-		CLR_D4;
-	}
-	if((byte & 32) == 32)
-	{
-		SET_D5;
-	}
-	else
-	{
-		CLR_D5;
-	}
-	if((byte & 64) == 64)
-	{
-		SET_D6;
-	}
-	else
-	{
-		CLR_D6;
-	}
-	if((byte & 128) == 128)
-	{
-		SET_D7;
-	}
-	else
-	{
-		CLR_D7;
-	}
-}
 
 
 /**************************************************************************/
@@ -153,7 +84,7 @@ void ssd1351SendByte(uint8_t byte, uint8_t command)
 
 	SET_E;
 
-	setByte(byte);
+	LPC_GPIO2->DATA = port2_table[byte];
 
 	CLR_E;
 
@@ -194,8 +125,6 @@ void ssd1351SetCursor(uint8_t x, uint8_t y)
 void lcdInit(void)
 {
 
-//  	SSP_IOConfig(0);	
-//  	SSP_Init(0);			
 
 	//Reset the LCD
 
@@ -209,22 +138,8 @@ void lcdInit(void)
 
 	
 	
-	//CLR_CS;
-
-	// Disable pullups
-
-	//  do we need this ? 
-	//  SSD1351_DISABLEPULLUPS();
-
-
-
-	//while(1)
-	//{
-		CMD(SSD1351_CMD_SETCOMMANDLOCK);
-	//DELAY(20);
-		DATA(0x12);                               // Unlocked to enter commands
-	//DELAY(20);
-	//}
+	CMD(SSD1351_CMD_SETCOMMANDLOCK);
+	DATA(0x12);                               // Unlocked to enter commands
 	CMD(SSD1351_CMD_SETCOMMANDLOCK);
 	DATA(0xB1);                               // Make all commands accessible 
 	CMD(SSD1351_CMD_SLEEPMODE_DISPLAYOFF);
