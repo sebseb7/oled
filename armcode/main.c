@@ -48,18 +48,70 @@ int main(void) {
 	delay_ms(50);
 	lcdInit();
 	delay_ms(50);
-	
+
+
+	int x;
 	while (1)
 	{
 		
-		lcdFillRGB(0,255,0);
+/*		lcdFillRGB(0,255,0);
 		delay_ms(400);
 		lcdFillRGB(0,0,255);
 		delay_ms(400);
 		lcdFillRGB(255,0,0);
 		delay_ms(400);
-
-//		tick();
+*/
+		for(x=255;x>0;x--)
+		{
+			lcdFillRGBd(x,x,x);
+			delay_ms(10);
+		}
+		for(x=0;x<255;x++)
+		{
+			lcdFillRGBd(x,0,0);
+			delay_ms(10);
+		}
+		for(x=255;x>0;x--)
+		{
+			lcdFillRGBd(x,0,0);
+			delay_ms(10);
+		}
+		for(x=0;x<255;x++)
+		{
+			lcdFillRGBd(x,x,0);
+			delay_ms(10);
+		}
+		for(x=255;x>0;x--)
+		{
+			lcdFillRGBd(x,x,0);
+			delay_ms(10);
+		}
+		for(x=0;x<255;x++)
+		{
+			lcdFillRGBd(0,x,0);
+			delay_ms(10);
+		}
+		for(x=255;x>0;x--)
+		{
+			lcdFillRGBd(0,x,0);
+			delay_ms(10);
+		}
+		for(x=0;x<255;x++)
+		{
+			lcdFillRGBd(0,x,x);
+			delay_ms(10);
+		}
+		for(x=255;x>0;x--)
+		{
+			lcdFillRGBd(0,x,x);
+			delay_ms(10);
+		}
+		for(x=0;x<255;x++)
+		{
+			lcdFillRGBd(0,0,x);
+			delay_ms(10);
+		}
+		tick();
 
 }
 }
