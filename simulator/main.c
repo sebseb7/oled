@@ -80,11 +80,11 @@ int main(int argc, char *argv[]) {
         tio.c_cc[VMIN]=1;
         tio.c_cc[VTIME]=5;
  
-        tty_fd=open("/dev/cu.usbmodem471", O_RDWR | O_NONBLOCK);      
+        tty_fd=open("/dev/cu.usbmodem411", O_RDWR | O_NONBLOCK);      
         cfsetospeed(&tio,B115200);            // 115200 baud
         cfsetispeed(&tio,B115200);            // 115200 baud
 #if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
-		speed_t speed = 38400;
+		speed_t speed = 115200;
 		if ( ioctl( tty_fd,	 IOSSIOSPEED, &speed ) == -1 )
 		{
 			printf( "Error %d calling ioctl( ..., IOSSIOSPEED, ... )\n", errno );
