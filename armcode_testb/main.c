@@ -137,11 +137,19 @@ int main(void) {
 	delay_ms(10);
 
 
-/*	while(1)
+	while(1)
 	{
-		tick();
+		lcdFillRGB(0,200,0);
+	//	LPC_GPIO2->DATA |= (1<<5);
+	//	LPC_GPIO1->DATA |= (1<<7);
+		delay_ms(50);
+		lcdFillRGB(200,0,0);
+	//	LPC_GPIO2->DATA &= ~(1<<5);
+	//	LPC_GPIO1->DATA &= ~(1<<7);
+		delay_ms(50);
+	//	tick();
 	}
-*/
+
 
 
 /* 

@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
         tio.c_cc[VMIN]=1;
         tio.c_cc[VTIME]=5;
  
-        tty_fd=open("/dev/cu.usbmodem411", O_RDWR | O_NONBLOCK);      
+        tty_fd=open("/dev/cu.usbmodemfa131", O_RDWR | O_NONBLOCK);      
         cfsetospeed(&tio,B115200);            // 115200 baud
         cfsetispeed(&tio,B115200);            // 115200 baud
 #if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
@@ -208,30 +208,6 @@ int main(int argc, char *argv[]) {
 						int g = leds[y][x][1];
 						int b = leds[y][x][2];
 				
-//						r=18;
-//						g=32;
-//						b=18;
-
-
-/*						r += 17;
-						g += 31;
-						b += 17;
-						
-						if(r>245)
-						{
-							r=245;
-						}
-						if(g>245)
-						{
-							g=245;
-						}
-						if(b>245)
-						{
-							b=245;
-						}
-*/					
-					
-						//printf("%x %x %x\n",1|((r>>2)<<2),2|((g>>2)<<2),3|((b>>2)<<2));
 					
 //						char cmd1[] = {1|((r>>2)<<2),2|((g>>2)<<2),3|((b>>2)<<2)}; 
 						if((last_r != r)||(last_g != g)||(last_b != b))

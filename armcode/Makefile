@@ -69,7 +69,9 @@ clean:
 #########################################################################
 
 flash: firmware.bin
-	cp firmware.bin /Volumes/CRP\ DISABLD
-	sync
-	diskutil eject /dev/disk2
+	if test -d /Volumes/CRP\ DISABLD ; then \
+	cp firmware.bin /Volumes/CRP\ DISABLD ; \
+	diskutil eject /Volumes/CRP\ DISABLD ; \
+	else echo "not present"; \
+	fi
 
