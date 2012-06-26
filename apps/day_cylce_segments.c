@@ -1,14 +1,47 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <assert.h>
+#include <time.h>
+#include <SDL/SDL.h>
+
+#include "main.h"
+#include "rect.h"
+
+#include <string.h>
+
+#include<sys/time.h>
+
+#include <stdio.h>
 #include <time.h>
 
 
 #include "main.h"
+#include "circle.h"
 #include "text.h"
-#include "rect.h"
 #include "day_cycle_phase.h"
 
+#include <fcntl.h>
+#include <termios.h>
+#include<unistd.h>
+#include<sys/time.h>
+
+#if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
+#include <sys/ioctl.h>
+#include <IOKit/serial/ioss.h>
+#include <errno.h>
+#endif
 
 
+int tty_fd;
+
+int8_t last[3][HOURS*SEGMENTS_PER_HOUR]={
+	{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},//red
+	{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},//green
+	{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0} //blue
+
+	
+};
 int8_t offset[3][HOURS*SEGMENTS_PER_HOUR]={
 	{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},//red
 	{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},//green
@@ -54,6 +87,26 @@ static void usb_init(void)
 #else
 #endif 
 	tcsetattr(tty_fd,TCSANOW,&tio);
+							
+							
+							char cmd1[] = {0xff}; 
+							write(tty_fd,&cmd1,1);
+							usleep(1000);
+							char cmd1a[] = {0x0}; 
+							write(tty_fd,&cmd1a,1);
+							usleep(1000);
+							
+							char cmd2[] = {0}; 
+							write(tty_fd,&cmd2,1);
+							usleep(1000);
+							
+							char cmd3[] = {0}; 
+							write(tty_fd,&cmd3,1);
+							usleep(1000);
+							
+							char cmd4[] = {0}; 
+							write(tty_fd,&cmd4,1);
+							usleep(1000);
 
 }
 
@@ -234,6 +287,50 @@ static uint8_t tick(void) {
 	{
 		setLedXY(i*2,127,phase[0][i]+offset[0][i],phase[1][i]+offset[1][i],phase[2][i]+offset[2][i]);
 		setLedXY(i*2+1,127,phase[0][i]+offset[0][i],phase[1][i]+offset[1][i],phase[2][i]+offset[2][i]);
+							
+		uint8_t r = phase[0][i]+offset[0][i];
+		uint8_t g = phase[1][i]+offset[1][i];
+		uint8_t b = phase[2][i]+offset[2][i];
+		uint8_t last_r = last[0][i];
+		uint8_t last_g = last[1][i];
+		uint8_t last_b = last[2][i];
+
+		if((last_r != r)||(last_g != g)||(last_b != b))
+		{	
+			last[0][i]=r;
+			last[1][i]=g;
+			last[2][i]=b;
+			
+			if(r == 0xff)
+				r = 0xfe;
+			if(g == 0xff)
+				g = 0xfe;
+			if(b == 0xff)
+				b = 0xfe;
+			
+			char cmd1[] = {0xff}; 
+			write(tty_fd,&cmd1,1);
+			usleep(1000);
+			char cmd1a[] = {i+1}; 
+			write(tty_fd,&cmd1a,1);
+			usleep(1000);
+			char cmd1b[] = {2}; 
+			write(tty_fd,&cmd1b,1);
+			usleep(1000);
+			
+			char cmd2[] = {r}; 
+			write(tty_fd,&cmd2,1);
+			usleep(1000);
+			
+			char cmd3[] = {g}; 
+			write(tty_fd,&cmd3,1);
+			usleep(1000);
+			
+			char cmd4[] = {b}; 
+			write(tty_fd,&cmd4,1);
+			usleep(1000);
+
+		}
 	}
 
 	draw_number(20,113,phase[0][index]+offset[0][index],3,'0',255,255,255);
