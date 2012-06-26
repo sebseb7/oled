@@ -1,4 +1,18 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <assert.h>
+#include <time.h>
+#include <SDL/SDL.h>
+
+#include "main.h"
+
+
+#include <string.h>
+
+#include<sys/time.h>
+
+#include <stdio.h>
 #include <time.h>
 
 
@@ -38,6 +52,41 @@ uint8_t hour = 0;
 
 uint8_t interva12 = 1;
 
+uint8_t initialized = 0;
+
+static void usb_init(void)
+{
+	struct termios tio;
+	
+	//memset(&tio,0,sizeof(tio));
+	tio.c_iflag=0;
+	tio.c_oflag=0;
+	tio.c_cflag=CS8|CREAD|CLOCAL;           // 8n1, see termios.h for more information
+	tio.c_lflag=0;
+	tio.c_cc[VMIN]=1;
+	tio.c_cc[VTIME]=5;
+
+	printf("1ok\n");
+#if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
+	tty_fd=open("/dev/cu.usbmodem411", O_RDWR | O_NONBLOCK);      
+	printf("ok\n");
+#else
+	tty_fd=open("/dev/ttyACM0", O_RDWR | O_NONBLOCK);      
+#endif
+	cfsetospeed(&tio,B115200);            // 115200 baud
+	cfsetispeed(&tio,B115200);            // 115200 baud
+#if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
+	speed_t speed = 115200;
+	if ( ioctl( tty_fd,	 IOSSIOSPEED, &speed ) == -1 )
+	{
+		printf( "Error %d calling ioctl( ..., IOSSIOSPEED, ... )\n", errno );
+	}
+#else
+#endif 
+	tcsetattr(tty_fd,TCSANOW,&tio);
+
+}
+
 static void print_offsets()
 {
 	FILE *file; 
@@ -45,15 +94,23 @@ static void print_offsets()
 
 	#define SIZE 0x100
 
-	time_t t;
-	char buffer[SIZE];
-	struct tm ltime;
+	//time_t t;
+	//char buffer[SIZE];
+	//struct tm ltime;
 
-	t = time (0);
-	localtime_r (& t, & ltime);
+	//t = time (0);
+	//localtime_r (& t, & ltime);
+
+	fprintf(file,"#define HOURS 24\n");
+    fprintf(file,"#define SEGMENTS_PER_HOUR 2\n\n");
+
+    fprintf(file,"uint8_t phase[3][HOURS*SEGMENTS_PER_HOUR]={\n\n");
 	
-	strftime (buffer, SIZE, "%A, %e of %B %Y , %H:%M", & ltime);
-	fprintf (file,"%s\n", buffer);
+//	   0       1       2       3       4       5       6       7       8       9      10      11      12      13      14      15      16      17      18      19      20      21      22      23
+
+	
+//	strftime (buffer, SIZE, "%A, %e of %B %Y , %H:%M", & ltime);
+//	fprintf (file,"%s\n", buffer);
 
 	for(uint8_t c = 0 ; c < 3 ; c++)
 	{
@@ -62,7 +119,7 @@ static void print_offsets()
 		for(uint8_t i = 0 ; i < HOURS*SEGMENTS_PER_HOUR;i++)
 		{
 			printf("%003i, ",offset[c][i]+phase[c][i]);
-			fprintf(file,"%003i, ",offset[c][i]+phase[c][i]);
+			fprintf(file,"%i, ",offset[c][i]+phase[c][i]);
 		}
 		if(c ==2)
 		{
@@ -77,7 +134,7 @@ static void print_offsets()
 		
 	}
 	printf("\n");
-	fprintf(file,"\n");
+	fprintf(file,"};\n");
 	fclose(file); 
 	
 	for(uint8_t c = 0 ; c < 3 ; c++)
@@ -174,6 +231,12 @@ static void key(uint8_t key) {
 
 static uint8_t tick(void) {
 
+	if(initialized == 0)
+	{
+		initialized = 1;
+		usb_init();
+	}
+
 	if(sdlpause == 0)
 	{
 		minute+=interva12;
@@ -235,6 +298,9 @@ static uint8_t tick(void) {
 							char cmd1[] = {0xff}; 
 							write(tty_fd,&cmd1,1);
 							usleep(1000);
+							char cmd1a[] = {0x0}; 
+							write(tty_fd,&cmd1a,1);
+							usleep(1000);
 							
 							char cmd2[] = {r}; 
 							write(tty_fd,&cmd2,1);
@@ -260,33 +326,6 @@ static uint8_t tick(void) {
 static void init(void) ATTRIBUTES
 void init(void) {
 	
-	struct termios tio;
-	
-	//memset(&tio,0,sizeof(tio));
-	tio.c_iflag=0;
-	tio.c_oflag=0;
-	tio.c_cflag=CS8|CREAD|CLOCAL;           // 8n1, see termios.h for more information
-	tio.c_lflag=0;
-	tio.c_cc[VMIN]=1;
-	tio.c_cc[VTIME]=5;
-
-#if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
-	tty_fd=open("/dev/cu.usbmodemfa131", O_RDWR | O_NONBLOCK);      
-#else
-	tty_fd=open("/dev/ttyACM0", O_RDWR | O_NONBLOCK);      
-#endif
-	cfsetospeed(&tio,B115200);            // 115200 baud
-	cfsetispeed(&tio,B115200);            // 115200 baud
-#if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
-	speed_t speed = 115200;
-	if ( ioctl( tty_fd,	 IOSSIOSPEED, &speed ) == -1 )
-	{
-		printf( "Error %d calling ioctl( ..., IOSSIOSPEED, ... )\n", errno );
-	}
-#else
-#endif 
-	tcsetattr(tty_fd,TCSANOW,&tio);
-
 	registerAnimation(tick, key, 10, 450);
 }
 

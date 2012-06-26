@@ -22,6 +22,40 @@ int8_t offset[3][HOURS*SEGMENTS_PER_HOUR]={
 uint8_t minute = 0;
 uint8_t hour = 0;
 
+uint8_t initialized = 0;
+
+static void usb_init(void)
+{
+	struct termios tio;
+	
+	//memset(&tio,0,sizeof(tio));
+	tio.c_iflag=0;
+	tio.c_oflag=0;
+	tio.c_cflag=CS8|CREAD|CLOCAL;           // 8n1, see termios.h for more information
+	tio.c_lflag=0;
+	tio.c_cc[VMIN]=1;
+	tio.c_cc[VTIME]=5;
+
+	printf("1ok\n");
+#if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
+	tty_fd=open("/dev/cu.usbmodem411", O_RDWR | O_NONBLOCK);      
+	printf("ok\n");
+#else
+	tty_fd=open("/dev/ttyACM0", O_RDWR | O_NONBLOCK);      
+#endif
+	cfsetospeed(&tio,B115200);            // 115200 baud
+	cfsetispeed(&tio,B115200);            // 115200 baud
+#if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
+	speed_t speed = 115200;
+	if ( ioctl( tty_fd,	 IOSSIOSPEED, &speed ) == -1 )
+	{
+		printf( "Error %d calling ioctl( ..., IOSSIOSPEED, ... )\n", errno );
+	}
+#else
+#endif 
+	tcsetattr(tty_fd,TCSANOW,&tio);
+
+}
 
 static void print_offsets()
 {
@@ -149,6 +183,12 @@ static void key(uint8_t key) {
 
 
 static uint8_t tick(void) {
+
+	if(initialized == 0)
+	{
+		initialized = 1;
+		usb_init();
+	}
 
 
 
