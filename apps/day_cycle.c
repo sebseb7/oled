@@ -1,5 +1,6 @@
 #include <stdio.h>
- 
+#include <time.h>
+
 
 #include "main.h"
 #include "circle.h"
@@ -74,24 +75,46 @@ uint8_t interva12 = 1;
 
 static void print_offsets()
 {
+	FILE *file; 
+	file = fopen("saved_colors.txt","a+");
+
+	#define SIZE 0x100
+
+	time_t t;
+	char buffer[SIZE];
+	struct tm ltime;
+
+	t = time (0);
+	localtime_r (& t, & ltime);
+	
+	strftime (buffer, SIZE, "%A, %e of %B %Y , %H:%M", & ltime);
+	fprintf (file,"%s\n", buffer);
+
 	for(uint8_t c = 0 ; c < 3 ; c++)
 	{
+		fprintf(file,"{");
 		printf("{");
 		for(uint8_t i = 0 ; i < HOURS*SEGMENTS_PER_HOUR;i++)
 		{
 			printf("%003i, ",offset[c][i]+phase[c][i]);
+			fprintf(file,"%003i, ",offset[c][i]+phase[c][i]);
 		}
 		if(c ==2)
 		{
 			printf("}\n");
+			fprintf(file,"}\n");
 		}else
 		{
 			printf("},\n");
+			fprintf(file,"},\n");
 		}
 
 		
 	}
 	printf("\n");
+	fprintf(file,"\n");
+	fclose(file); 
+	
 	for(uint8_t c = 0 ; c < 3 ; c++)
 	{
 		for(uint8_t i = 0 ; i < HOURS*SEGMENTS_PER_HOUR;i++)
