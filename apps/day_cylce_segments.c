@@ -3,7 +3,6 @@
 
 
 #include "main.h"
-#include "circle.h"
 #include "text.h"
 #include "rect.h"
 #include "day_cycle_phase.h"
@@ -23,7 +22,6 @@ int8_t offset[3][HOURS*SEGMENTS_PER_HOUR]={
 uint8_t minute = 0;
 uint8_t hour = 0;
 
-uint8_t interva12 = 1;
 
 static void print_offsets()
 {
@@ -80,10 +78,6 @@ static void print_offsets()
 
 static void key(uint8_t key) {
 
-	if(key == 1)
-	{
-		minute = 0;
-	}
 	if(key == 2)
 	{
 		if(minute<30)
@@ -113,16 +107,6 @@ static void key(uint8_t key) {
 			hour--;
 		}
 	}
-	if(key == 4)
-	{
-		if(interva12 == 1)
-		{
-			interva12 = 5;
-		}else{
-			interva12 = 1;
-		}
-	
-	}
 	
 	uint8_t index = hour*SEGMENTS_PER_HOUR;
 	if(minute >= (60/SEGMENTS_PER_HOUR))
@@ -134,28 +118,33 @@ static void key(uint8_t key) {
 	if(key == 5)
 	{
 		offset[0][index]++;
+		print_offsets();
 	}
 	if(key == 6)
 	{
 		offset[0][index]--;
+		print_offsets();
 	}
 	if(key == 7)
 	{
 		offset[1][index]++;
+		print_offsets();
 	}
 	if(key == 8)
 	{
 		offset[1][index]--;
+		print_offsets();
 	}
 	if(key == 9)
 	{
 		offset[2][index]++;
+		print_offsets();
 	}
 	if(key == 0)
 	{
 		offset[2][index]--;
+		print_offsets();
 	}
-	print_offsets();
 }
 
 

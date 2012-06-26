@@ -7,7 +7,18 @@
 #include "text.h"
 #include "day_cycle_phase.h"
 
+#include <fcntl.h>
+#include <termios.h>
+#include<unistd.h>
+#include<sys/time.h>
 
+#if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
+#include <sys/ioctl.h>
+#include <IOKit/serial/ioss.h>
+#include <errno.h>
+#endif
+
+int tty_fd;
 
 int8_t offset[3][HOURS*SEGMENTS_PER_HOUR]={
 	{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},//red
@@ -17,6 +28,9 @@ int8_t offset[3][HOURS*SEGMENTS_PER_HOUR]={
 	
 };
 
+	int last_r = 0;
+	int last_g = 0;
+	int last_b = 0;
 
 
 uint8_t minute = 0;
@@ -209,6 +223,35 @@ static uint8_t tick(void) {
 	draw_text(  62,100,":",255,255,255);
 	draw_number(68,100,minute,2,'0',255,255,255);
 
+						if((last_r != r)||(last_g != g)||(last_b != b))
+						{
+							if(r == 0xff)
+								r = 0xfe;
+							if(g == 0xff)
+								g = 0xfe;
+							if(b == 0xff)
+								b = 0xfe;
+							
+							char cmd1[] = {0xff}; 
+							write(tty_fd,&cmd1,1);
+							usleep(1000);
+							
+							char cmd2[] = {r}; 
+							write(tty_fd,&cmd2,1);
+							usleep(1000);
+							
+							char cmd3[] = {g}; 
+							write(tty_fd,&cmd3,1);
+							usleep(1000);
+							
+							char cmd4[] = {b}; 
+							write(tty_fd,&cmd4,1);
+							usleep(1000);
+						}
+						
+						last_r = r;
+						last_g = g;
+						last_b = b;
 	return 0;
 }
 
@@ -217,6 +260,33 @@ static uint8_t tick(void) {
 static void init(void) ATTRIBUTES
 void init(void) {
 	
+	struct termios tio;
+	
+	//memset(&tio,0,sizeof(tio));
+	tio.c_iflag=0;
+	tio.c_oflag=0;
+	tio.c_cflag=CS8|CREAD|CLOCAL;           // 8n1, see termios.h for more information
+	tio.c_lflag=0;
+	tio.c_cc[VMIN]=1;
+	tio.c_cc[VTIME]=5;
+
+#if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
+	tty_fd=open("/dev/cu.usbmodemfa131", O_RDWR | O_NONBLOCK);      
+#else
+	tty_fd=open("/dev/ttyACM0", O_RDWR | O_NONBLOCK);      
+#endif
+	cfsetospeed(&tio,B115200);            // 115200 baud
+	cfsetispeed(&tio,B115200);            // 115200 baud
+#if defined(MAC_OS_X_VERSION_10_4) && (MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_4)
+	speed_t speed = 115200;
+	if ( ioctl( tty_fd,	 IOSSIOSPEED, &speed ) == -1 )
+	{
+		printf( "Error %d calling ioctl( ..., IOSSIOSPEED, ... )\n", errno );
+	}
+#else
+#endif 
+	tcsetattr(tty_fd,TCSANOW,&tio);
+
 	registerAnimation(tick, key, 10, 450);
 }
 
