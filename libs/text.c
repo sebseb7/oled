@@ -44,7 +44,7 @@ void draw_number(uint8_t x, uint8_t y, int32_t number, uint8_t length, uint8_t p
 {
 
 	char s[10];
-	sprintf(s, "%lu", number);
+	sprintf(s, "%d", number);
 	int len = strlen(s);
 
 	if (length < len) {

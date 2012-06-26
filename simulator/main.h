@@ -14,7 +14,7 @@
 #define ATTRIBUTES	__attribute__((constructor));
 
 typedef uint8_t (*tick_fun)(void);
-typedef uint8_t (*key_fun)(uint8_t);
+typedef void (*key_fun)(uint8_t);
 
 int sdlpause;
 

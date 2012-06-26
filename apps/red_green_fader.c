@@ -28,7 +28,7 @@ static uint8_t tick(void) {
 }
 
 
-static uint8_t key(uint8_t key) {
+static void key(uint8_t key) {
 
 }
 

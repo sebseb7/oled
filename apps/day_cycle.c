@@ -103,7 +103,7 @@ static void print_offsets()
 	printf("\n");
 }
 
-static uint8_t key(uint8_t key) {
+static void key(uint8_t key) {
 
 	if(key == 1)
 	{
