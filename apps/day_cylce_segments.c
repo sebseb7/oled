@@ -133,7 +133,7 @@ static void print_offsets()
 		for(uint8_t i = 0 ; i < HOURS*SEGMENTS_PER_HOUR;i++)
 		{
 			printf("%003i, ",offset[c][i]+phase[c][i]);
-			fprintf(file,"%i, ",offset[c][i]+phase[c][i]);
+			fprintf(file,"%i, ",(uint8_t)(offset[c][i]+phase[c][i]));
 		}
 		if(c ==2)
 		{

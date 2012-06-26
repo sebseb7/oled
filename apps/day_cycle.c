@@ -42,9 +42,9 @@ int8_t offset[3][HOURS*SEGMENTS_PER_HOUR]={
 	
 };
 
-	int last_r = 0;
-	int last_g = 0;
-	int last_b = 0;
+	uint8_t last_r = 0;
+	uint8_t last_g = 0;
+	uint8_t last_b = 0;
 
 
 uint8_t minute = 0;
@@ -119,7 +119,7 @@ static void print_offsets()
 		for(uint8_t i = 0 ; i < HOURS*SEGMENTS_PER_HOUR;i++)
 		{
 			printf("%003i, ",offset[c][i]+phase[c][i]);
-			fprintf(file,"%i, ",offset[c][i]+phase[c][i]);
+			fprintf(file,"%i, ",(uint8_t)(offset[c][i]+phase[c][i]));
 		}
 		if(c ==2)
 		{
