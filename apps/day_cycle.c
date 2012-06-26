@@ -90,7 +90,7 @@ static void usb_init(void)
 static void print_offsets()
 {
 	FILE *file; 
-	file = fopen("saved_colors.txt","a+");
+	file = fopen("../apps/day_cycle_phase.h","w+");
 
 	#define SIZE 0x100
 

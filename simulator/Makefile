@@ -28,6 +28,7 @@ BINARIES=$(SOURCES:../apps/%.c=%$(BINEXT))
 
 LIB_SOURCES=$(wildcard ../libs/*.c)
 LIB_HEADERS=$(wildcard ../libs/*.h)
+APP_HEADERS=$(wildcard ../apps/*.h)
 
 
 
@@ -36,6 +37,6 @@ all: $(BINARIES)
 clean:
 	rm -f ${BINARIES}
 
-%$(BINEXT): ../apps/%.c main.c main.h Makefile $(LIB_HEADERS) $(LIB_SOURCES)
+%$(BINEXT): ../apps/%.c main.c main.h Makefile $(LIB_HEADERS) $(LIB_SOURCES) $(APP_HEADERS)
 	$(COMPILER) $(FLAGS) main.c $(LDFLAGS) $< -o $@ -I. $(LIB_SOURCES) -I../libs -I../apps
 

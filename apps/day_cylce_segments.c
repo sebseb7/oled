@@ -113,19 +113,18 @@ static void usb_init(void)
 static void print_offsets()
 {
 	FILE *file; 
-	file = fopen("saved_colors.txt","a+");
+	file = fopen("../apps/day_cycle_phase.h","w+");
 
-	#define SIZE 0x100
+	fprintf(file,"#define HOURS 24\n");
+    fprintf(file,"#define SEGMENTS_PER_HOUR 2\n\n");
 
-	time_t t;
-	char buffer[SIZE];
-	struct tm ltime;
-
-	t = time (0);
-	localtime_r (& t, & ltime);
+    fprintf(file,"uint8_t phase[3][HOURS*SEGMENTS_PER_HOUR]={\n\n");
 	
-	strftime (buffer, SIZE, "%A, %e of %B %Y , %H:%M", & ltime);
-	fprintf (file,"%s\n", buffer);
+//	   0       1       2       3       4       5       6       7       8       9      10      11      12      13      14      15      16      17      18      19      20      21      22      23
+
+	
+//	strftime (buffer, SIZE, "%A, %e of %B %Y , %H:%M", & ltime);
+//	fprintf (file,"%s\n", buffer);
 
 	for(uint8_t c = 0 ; c < 3 ; c++)
 	{
@@ -134,7 +133,7 @@ static void print_offsets()
 		for(uint8_t i = 0 ; i < HOURS*SEGMENTS_PER_HOUR;i++)
 		{
 			printf("%003i, ",offset[c][i]+phase[c][i]);
-			fprintf(file,"%003i, ",offset[c][i]+phase[c][i]);
+			fprintf(file,"%i, ",offset[c][i]+phase[c][i]);
 		}
 		if(c ==2)
 		{
@@ -149,7 +148,7 @@ static void print_offsets()
 		
 	}
 	printf("\n");
-	fprintf(file,"\n");
+	fprintf(file,"};\n");
 	fclose(file); 
 	
 	for(uint8_t c = 0 ; c < 3 ; c++)
