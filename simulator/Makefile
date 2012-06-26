@@ -37,5 +37,5 @@ clean:
 	rm -f ${BINARIES}
 
 %$(BINEXT): ../apps/%.c main.c main.h Makefile $(LIB_HEADERS) $(LIB_SOURCES)
-	$(COMPILER) $(FLAGS) main.c $(LDFLAGS) $< -o $@ -I. $(LIB_SOURCES) -I../libs
+	$(COMPILER) $(FLAGS) main.c $(LDFLAGS) $< -o $@ -I. $(LIB_SOURCES) -I../libs -I../apps
 
