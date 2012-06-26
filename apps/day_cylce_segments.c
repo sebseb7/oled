@@ -190,6 +190,12 @@ static uint8_t tick(void) {
 		}
 	}
 
+	for(i=0;i<48;i++)
+	{
+		setLedXY(i*2,127,phase[0][i]+offset[0][i],phase[1][i]+offset[1][i],phase[2][i]+offset[2][i]);
+		setLedXY(i*2+1,127,phase[0][i]+offset[0][i],phase[1][i]+offset[1][i],phase[2][i]+offset[2][i]);
+	}
+
 	draw_number(20,113,phase[0][index]+offset[0][index],3,'0',255,255,255);
 	draw_number(50,113,phase[1][index]+offset[1][index],3,'0',255,255,255);
 	draw_number(80,113,phase[2][index]+offset[2][index],3,'0',255,255,255);
