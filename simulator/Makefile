@@ -9,8 +9,8 @@ BINEXT=
 
 ifeq ($(UNAME), Darwin)
 	COMPILER = clang
-	FLAGS   += -I/Library/Frameworks/SDL.framework/Headers
-	LDFLAGS +=   -framework SDL -framework Cocoa SDLmain.m
+	FLAGS   += `sdl-config --cflags`
+	LDFLAGS += `sdl-config --libs`
 endif
 
 ifeq ($(UNAME), Linux)
